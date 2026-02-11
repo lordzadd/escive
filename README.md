@@ -15,7 +15,7 @@ Communications between devices are based on reverse engineering of packets sent 
 ### Android
 
 The app is not *officialy* available on the Play Store.  
-You can download it using the latest APK provided in the latest [release](https://github.com/johan-perso/escive/releases/laetest) of this repository.
+You can download it using the latest APK provided in the latest [release](https://github.com/johan-perso/escive/releases/latest) of this repository.
 
 > You can also join the [closed beta](https://johanstick.fr/escive-en-androidbeta) to receive updates via the Play Store. You will have to wait to be accepted, so it is recommended to download the APK to start using the app.
 
