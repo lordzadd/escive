@@ -295,3 +295,34 @@ The production iPhone release build and IPA integrity checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.1-brake-test-unsigned.ipa`.
 Version 1.2.1, build 10. SHA-256: `8b94a99145cad7bc84701236695a11859163d1a8d115c42890a9fe00f84ffa4d`.
 This is an experimental phone-only build for Signulous, not a verified physical parking fix.
+
+## Conditional lock-sequence test — 1.2.2+11
+
+The user reports that the alternate 0x3A brake-lock experiment failed.
+Screenshots after using Vicont show electronic lock and brake lock changing together.
+The user also reports Bluetooth binding on in the parked state.
+The unlocked binding state is not established by that report.
+
+This release removes the failed 0x3A experiment from the lock action.
+It tests the sequence found in Vicont's versionType=1 path:
+
+1. Send 0x33 with 01 for lock or 02 for unlock.
+2. Require fresh telemetry that confirms the requested electronic-lock state.
+3. If binding differs from that state, send 0x4C with 01 or 02 respectively.
+4. Require matching electronic-lock, brake-lock, and binding feedback.
+
+The scooter's exact versionType remains unknown. This is a source-backed experiment, not a proven model match.
+Binding is not changed on connection or unsolicited telemetry.
+The operation requires fresh stationary telemetry and blocks overlapping commands.
+Timeouts, write errors, and disconnects do not report success.
+A binding flag alone does not confirm parking. Physical P and immobilization still require manual testing.
+The layout is unchanged from the restored 1.1.2 dashboard.
+
+Synthetic tests cover both Bluetooth profiles, the lock and unlock sequence,
+missing electronic feedback, missing brake feedback, already matching binding, and disconnect cancellation.
+The real-device screenshots are evidence about displayed status, not command captures.
+
+All 35 tests pass. Static analysis reports no issues.
+Release build and IPA archive checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.2-lock-sequence-test-unsigned.ipa` (version 1.2.2, build 11).
+SHA-256: `81169b383d954dc357597f8b8937a6b93b8dac050eb7818abfe393e63da99777`.

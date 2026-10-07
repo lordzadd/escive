@@ -57,6 +57,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await pumpSteps(tester, 100);
     globals.bridge = null;
+    platform.onWrite = null;
   }
 
   for (final profile in ['fff0', 'fee0']) {
@@ -69,6 +70,17 @@ void main() {
       expect(globals.currentDevice['currentActivity']['battery'], 75);
       expect(globals.currentDevice['stats']['totalDistanceKm'], 69);
       expect(bridge.gears, [1, 3, 7]);
+      var electronic = false, parking = false, bound = false;
+      platform.onWrite = (bytes) {
+        if (bytes.length != 8 || ![0x33, 0x4c].contains(bytes[4])) return;
+        if (bytes[4] == 0x33) electronic = bytes[6] == 1;
+        if (bytes[4] == 0x4c) parking = bound = bytes[6] == 1;
+        platform.telemetry(
+            locked: electronic,
+            brakeLocked: parking,
+            bluetoothBound: bound,
+            gearMask: 0x45);
+      };
       final commands = <Future<bool> Function()>[
         () => bridge.setLock(true),
         () => bridge.setLock(false),
@@ -82,8 +94,8 @@ void main() {
         () => bridge.findScooter(),
       ];
       final payloads = [
-        [58, 2],
-        [58, 1],
+        [76, 1],
+        [76, 2],
         [69, 2],
         [69, 1],
         [66, 3],
@@ -95,7 +107,7 @@ void main() {
       ];
       for (var i = 0; i < commands.length; i++) {
         final result = commands[i]();
-        await pumpSteps(tester, 5);
+        await pumpSteps(tester, 10);
         expect(await result, true);
         final code = payloads[i][0], value = payloads[i][1];
         expect(platform.writes.last.value,
@@ -209,6 +221,64 @@ void main() {
     await pumpSteps(tester, 5);
     expect(await failed, false);
     expect(globals.currentDevice['currentActivity']['light'], false);
+    await cleanup(tester);
+  });
+  testWidgets(
+      'lock does not send binding follow-up without electronic feedback',
+      (tester) async {
+    await mount(tester);
+    await connect(tester);
+    final start = platform.writes.length;
+    final result = bridge.setLock(true);
+    await pumpSteps(tester, 35);
+    expect(await result, false);
+    expect(platform.writes.skip(start).map((w) => w.value[4]), [0x33]);
+    expect(globals.currentDevice['currentActivity']['locked'], false);
+    await cleanup(tester);
+  });
+  testWidgets('binding response alone cannot confirm parking', (tester) async {
+    await mount(tester);
+    await connect(tester);
+    platform.onWrite = (bytes) {
+      if (bytes.length == 8) {
+        platform.telemetry(
+            locked: true, brakeLocked: false, bluetoothBound: bytes[4] == 0x4c);
+      }
+    };
+    final result = bridge.setLock(true);
+    await pumpSteps(tester, 35);
+    expect(await result, false);
+    expect(globals.currentDevice['currentActivity']['locked'], false);
+    expect(globals.currentDevice['currentActivity']['bluetoothBound'], true);
+    await cleanup(tester);
+  });
+  testWidgets('already matching binding does not send an extra command',
+      (tester) async {
+    await mount(tester);
+    await connect(tester);
+    platform.onWrite = (bytes) {
+      if (bytes.length == 8) {
+        platform.telemetry(
+            locked: true, brakeLocked: true, bluetoothBound: true);
+      }
+    };
+    final start = platform.writes.length;
+    final result = bridge.setLock(true);
+    await pumpSteps(tester, 10);
+    expect(await result, true);
+    expect(platform.writes.skip(start).map((w) => w.value[4]), [0x33]);
+    await cleanup(tester);
+  });
+  testWidgets('disconnect cancels a pending parking sequence', (tester) async {
+    await mount(tester);
+    await connect(tester);
+    final start = platform.writes.length;
+    final result = bridge.setLock(true);
+    await pumpSteps(tester, 5);
+    await tester.runAsync(() => bridge.dispose());
+    await pumpSteps(tester, 2);
+    expect(await result, false);
+    expect(platform.writes.skip(start).map((w) => w.value[4]), [0x33]);
     await cleanup(tester);
   });
   testWidgets('parking indicator follows brake status, not electronic lock',

@@ -24,6 +24,8 @@ class VicontBridge {
   BuildContext? _context;
   Map _saved = {};
   bool _busy = false;
+  bool _parkingOperation = false;
+  int _statusRevision = 0;
   bool _losing = false;
   final List<int> gears = [];
   // Session-only capabilities: never enable tuning from cached device values.
@@ -262,13 +264,16 @@ class VicontBridge {
       final values = VicontProtocol.telemetry(frame);
       if (values.isEmpty) continue;
       if (frame[1] == 0x11) {
-        // Experimental parking-brake route. Keep the two status bits distinct.
+        // Keep parking brake and electronic-lock feedback distinct.
         values['electronicLocked'] = values['locked'];
         values['locked'] = values['brakeLocked'];
       }
       _header = frame[0];
       if (frame[1] == 0x10) _lastSpeed = DateTime.now();
-      if (frame[1] == 0x11) _lastStatus = DateTime.now();
+      if (frame[1] == 0x11) {
+        _lastStatus = DateTime.now();
+        _statusRevision++;
+      }
       if (values['gears'] is List<int>) {
         gears
           ..clear()
@@ -308,8 +313,8 @@ class VicontBridge {
   }
 
   Future<bool> command(int code, List<int> payload,
-      {bool stationary = false}) async {
-    if (_busy) return false;
+      {bool stationary = false, bool parkingSequence = false}) async {
+    if (_busy || (_parkingOperation && !parkingSequence)) return false;
     try {
       if (!ready) throw StateError('Wait for current scooter data.');
       if (stationary && (_saved['currentActivity']['speedKmh'] as num) > 1) {
@@ -332,10 +337,71 @@ class VicontBridge {
     }
   }
 
-  Future<bool> setLock(bool state) =>
-      // Vendor sendSwitch(58, currentState): inactive -> 2, active -> 1.
-      // Hardware meaning and persistence need the user's physical test.
-      command(0x3a, [state ? 2 : 1], stationary: true);
+  Future<bool> _waitParkingStatus(
+      int generation, int afterRevision, bool Function(Map) matches) async {
+    for (var i = 0; i < 40; i++) {
+      if (generation != _generation || !ready) return false;
+      if (_statusRevision > afterRevision &&
+          matches(_saved['currentActivity'] as Map)) {
+        return true;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+    return false;
+  }
+
+  Future<bool> setLock(bool state) async {
+    if (_parkingOperation || _busy) return false;
+    _parkingOperation = true;
+    final generation = _generation;
+    try {
+      var revision = _statusRevision;
+      if (!await command(0x33, [state ? 1 : 2],
+          stationary: true, parkingSequence: true)) {
+        return false;
+      }
+      final electronic = await _waitParkingStatus(
+          generation, revision, (a) => a['electronicLocked'] == state);
+      if (!electronic) {
+        throw StateError('Electronic lock response not confirmed.');
+      }
+      if (generation != _generation || !ready) return false;
+      final activity = _saved['currentActivity'] as Map;
+      // Mirror Vicont's versionType=1 follow-up only during the user's lock action.
+      // Do not change binding automatically on connection or unsolicited telemetry.
+      if (activity['bluetoothBound'] != state) {
+        revision = _statusRevision;
+        if (!await command(0x4c, [state ? 1 : 2],
+            stationary: true, parkingSequence: true)) {
+          return false;
+        }
+      }
+      final confirmed = await _waitParkingStatus(
+          generation,
+          revision,
+          (a) =>
+              a['electronicLocked'] == state &&
+              a['brakeLocked'] == state &&
+              a['bluetoothBound'] == state);
+      if (!confirmed) {
+        throw StateError(
+            'Parking state not confirmed. Check P on the scooter.');
+      }
+      logarte.log(
+          'Vicont parking sequence: reported state confirmed ($state). Physical P remains a device check.');
+      return true;
+    } catch (error) {
+      logarte.log('Vicont parking sequence failed: $error');
+      final context = _context;
+      if (context != null && context.mounted) {
+        showSnackBar(context, error.toString());
+      }
+      return false;
+    } finally {
+      _parkingOperation = false;
+    }
+  }
+
   Future<bool> turnLight(bool state) => command(0x45, [state ? 2 : 1]);
   Future<bool> setSpeedMode(int index) async {
     if (index < 0 || index >= gears.length) return false;

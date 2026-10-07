@@ -5,9 +5,9 @@ Hardware compatibility is not yet verified.
 
 ## Ready for signing
 
-The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.2.1-brake-test-unsigned.ipa`.
+The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.2.2-lock-sequence-test-unsigned.ipa`.
 Sign the IPA with your signing service before installation.
-Version 1.2.1 restores the 1.1.2 dashboard layout and tests the alternate brake-lock command.
+Version 1.2.2 keeps the restored 1.1.2 layout and tests Vicont’s conditional lock/binding sequence.
 The command is experimental and has not been confirmed to activate P on this scooter.
 The added features from 1.2.0 include visible parking controls, ride modes, scooter units, performance settings, and detailed diagnostics.
 Tap Read scooter settings to load supported mode and tuning controls.

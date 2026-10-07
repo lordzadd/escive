@@ -11,12 +11,16 @@ void main() {
   FlutterBluePlusPlatform.instance = platform;
   var locked = false, light = false, cruise = false, zeroStart = false;
   var gear = 1;
+  var electronic = false;
   platform.onWrite = (bytes) {
     debugPrint('QA TX: $bytes');
     if (bytes.length != 8) return;
     switch (bytes[4]) {
-      case 0x3a:
-        locked = bytes[6] == 2;
+      case 0x33:
+        electronic = bytes[6] == 1;
+        break;
+      case 0x4c:
+        locked = bytes[6] == 1;
         break;
       case 0x45:
         light = bytes[6] == 2;
@@ -35,7 +39,9 @@ void main() {
   Timer.periodic(const Duration(seconds: 1), (_) {
     if (platform.connectCount > platform.disconnectCount) {
       platform.telemetry(
-          locked: locked,
+          locked: electronic,
+          brakeLocked: locked,
+          bluetoothBound: locked,
           light: light,
           gear: gear,
           cruise: cruise,
