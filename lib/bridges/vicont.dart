@@ -261,6 +261,11 @@ class VicontBridge {
       }
       final values = VicontProtocol.telemetry(frame);
       if (values.isEmpty) continue;
+      if (frame[1] == 0x11) {
+        // Experimental parking-brake route. Keep the two status bits distinct.
+        values['electronicLocked'] = values['locked'];
+        values['locked'] = values['brakeLocked'];
+      }
       _header = frame[0];
       if (frame[1] == 0x10) _lastSpeed = DateTime.now();
       if (frame[1] == 0x11) _lastStatus = DateTime.now();
@@ -328,7 +333,9 @@ class VicontBridge {
   }
 
   Future<bool> setLock(bool state) =>
-      command(0x33, [state ? 1 : 2], stationary: true);
+      // Vendor sendSwitch(58, currentState): inactive -> 2, active -> 1.
+      // Hardware meaning and persistence need the user's physical test.
+      command(0x3a, [state ? 2 : 1], stationary: true);
   Future<bool> turnLight(bool state) => command(0x45, [state ? 2 : 1]);
   Future<bool> setSpeedMode(int index) async {
     if (index < 0 || index >= gears.length) return false;

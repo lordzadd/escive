@@ -155,6 +155,7 @@ final class FakeVicontPlatform extends FlutterBluePlusPlatform {
   void telemetry(
       {int speedTenths = 0,
       bool locked = false,
+      bool? brakeLocked,
       bool light = false,
       int gearMask = 7,
       int gear = 1,
@@ -189,7 +190,7 @@ final class FakeVicontPlatform extends FlutterBluePlusPlatform {
       69,
       0,
       0,
-      0,
+      (brakeLocked ?? locked) ? 4 : 0,
       0
     ]);
     notify([90, 18, 9, 0, 0, 0, 0, 0, 0, 0, 0, gearMask]);

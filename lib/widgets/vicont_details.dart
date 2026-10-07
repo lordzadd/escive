@@ -177,7 +177,7 @@ class VicontDetails extends StatelessWidget {
               value('Battery temperature', 'batteryTemperature', ' °C'),
               value('Motor speed', 'motorRpm', ' RPM'),
               flag('Powered on', 'poweredOn'),
-              flag('Parking lock', 'locked'),
+              flag('Electronic lock', 'electronicLocked'),
               flag('Brake lock', 'brakeLocked'),
               flag('Braking', 'braking'),
               flag('Cruise active', 'cruiseActive'),

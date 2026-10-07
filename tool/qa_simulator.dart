@@ -15,8 +15,8 @@ void main() {
     debugPrint('QA TX: $bytes');
     if (bytes.length != 8) return;
     switch (bytes[4]) {
-      case 0x33:
-        locked = bytes[6] == 1;
+      case 0x3a:
+        locked = bytes[6] == 2;
         break;
       case 0x45:
         light = bytes[6] == 2;

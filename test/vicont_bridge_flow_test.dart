@@ -82,8 +82,8 @@ void main() {
         () => bridge.findScooter(),
       ];
       final payloads = [
-        [51, 1],
-        [51, 2],
+        [58, 2],
+        [58, 1],
         [69, 2],
         [69, 1],
         [66, 3],
@@ -209,6 +209,20 @@ void main() {
     await pumpSteps(tester, 5);
     expect(await failed, false);
     expect(globals.currentDevice['currentActivity']['light'], false);
+    await cleanup(tester);
+  });
+  testWidgets('parking indicator follows brake status, not electronic lock',
+      (tester) async {
+    await mount(tester);
+    await connect(tester);
+    platform.telemetry(locked: true, brakeLocked: false);
+    await pumpSteps(tester, 2);
+    expect(globals.currentDevice['currentActivity']['electronicLocked'], true);
+    expect(globals.currentDevice['currentActivity']['locked'], false);
+    platform.telemetry(locked: false, brakeLocked: true);
+    await pumpSteps(tester, 2);
+    expect(globals.currentDevice['currentActivity']['electronicLocked'], false);
+    expect(globals.currentDevice['currentActivity']['locked'], true);
     await cleanup(tester);
   });
   testWidgets('disconnect clears controls and supports a fresh connection',

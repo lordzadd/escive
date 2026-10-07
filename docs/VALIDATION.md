@@ -268,3 +268,30 @@ This is a candidate cause, not a confirmed diagnosis for this scooter.
 Do not send 0x4C or substitute the accessory command 0x3A without matching model/state evidence.
 The current 1.2.0 Live diagnostics section exposes Parking lock, Brake lock, and Bluetooth binding
 for comparing Vicont's physical P state against the failed eScive lock attempt.
+
+## Alternate brake-lock test — 1.2.1+10
+
+The user explicitly requested an IPA using the alternate lock command for a physical test.
+This authorizes the experiment; it does not establish hardware compatibility.
+
+The existing lock action now sends command 0x3A instead of 0x33.
+Payload 02 requests activation and 01 requests release, following the shared sendSwitch(58, currentState) mapping.
+The vendor's handler resets its local brake flag after three seconds.
+It does not prove that this command provides persistent parking on this model.
+No binding notification (0x4C) is added.
+
+The app's locked indicator now follows the reported brake-lock bit in packet 0x11, byte 11, bit 2.
+It preserves the separate electronic-lock bit as electronicLocked for diagnostics.
+A regression test verifies that an electronic-lock bit alone does not show parking lock.
+No status is changed merely because the app sends a command.
+
+The original 1.1.2 dashboard layout is restored, including the lock slider and light switch.
+Additional features stay in the collapsed Scooter settings section.
+The user will check whether the scooter displays P and prevents movement.
+The user should keep Vicont available to release the scooter if the experimental route fails.
+
+All 31 tests pass. Static analysis has no findings.
+The production iPhone release build and IPA integrity checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.1-brake-test-unsigned.ipa`.
+Version 1.2.1, build 10. SHA-256: `8b94a99145cad7bc84701236695a11859163d1a8d115c42890a9fe00f84ffa4d`.
+This is an experimental phone-only build for Signulous, not a verified physical parking fix.
