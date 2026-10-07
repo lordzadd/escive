@@ -409,3 +409,26 @@ Native menu appearance remains a device check.
 Release build and IPA integrity checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.6-quick-actions-unsigned.ipa`.
 SHA-256: `ee558142a7dd21a4f31360784f6cc8c168bcd84e92660f360e9641be6259d356`.
+
+## One-button Lock Screen control — 1.2.7+16
+
+Adds an embedded circular WidgetKit extension and a shared background App Intent.
+The user requests one button for both locking and unlocking.
+The native CoreBluetooth path reads fresh status before selecting the opposite state.
+It checks speed, waits for consistent electronic/brake flags, and requires post-command confirmation.
+It uses the same APK-verified 0x33 payloads as the working phone controls.
+The host app saves the selected scooter only after settings initialize.
+The widget needs no App Group entitlement and never opens the app interface intentionally.
+The main app declares the bluetooth-central background mode.
+
+Native protocol checks pass for all eight vendor fixtures and for fragmented telemetry,
+stale or moving states, transitional flags, both toggle directions, and confirmation timing.
+All 40 Flutter tests pass. Static analysis passes.
+Both host and extension App Intent metadata contain ToggleScooterLockIntent with openAppWhenRun=false.
+The host process contains the Bluetooth implementation; the extension fails explicitly if execution is incorrectly routed there.
+Physical Bluetooth behavior, native Lock Screen interaction, and Signulous extension signing remain unverified on the user's phone.
+See LOCK_SCREEN_WIDGET.md for installation steps and architecture.
+
+Release build, embedded extension metadata, version matching, and IPA integrity checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.7-lockscreen-widget-unsigned.ipa`.
+SHA-256: `5933806f813ff0cdceb21ff91ce8468b41ebd08ca74b174ff124391ceba30455`.

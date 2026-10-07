@@ -85,8 +85,6 @@ void main() async {
 
   debugPrint("TimeMesuring: main.dart: async operations has finished, elapsed: ${mesureStopwatch.elapsedMilliseconds} ms");
 
-  WatchCompanion.start();
-
   runApp(
     Phoenix(
       child: localization.EasyLocalization(
@@ -220,7 +218,9 @@ class _MainAppState extends State<MainApp> {
     debugPrint("TimeMesuring: main.dart: initState() was called, elapsed: ${mesureStopwatch.elapsedMilliseconds} ms");
     super.initState();
 
-    _initializationFuture = refreshSettingsThenStates();
+    _initializationFuture = refreshSettingsThenStates().then((_) {
+      WatchCompanion.start();
+    });
 
     sendKustomVariable(variableName: 'state', variableValue: 'none');
     sendKustomVariable(variableName: 'speedMode', variableValue: '0');

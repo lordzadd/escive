@@ -8,14 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		0B3E55931B9E3543FC160E3E /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60FFFFC7C45171C2F5D5E915 /* Pods_Runner.framework */; };
+		0EDF8BF5E7CB12D5E5CF9C78 /* VicontLockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DA52350CB7F9004B8806AA /* VicontLockProtocol.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1C975CEE00A403E492A71092 /* ScooterLocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCA796F1ABC91B28E5B7AE4 /* ScooterLocker.swift */; };
 		23C39A96F77470C623FA89F4 /* HostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C017B9AB42E7200F8B5EB7A /* HostingController.swift */; };
 		31F2D3366CC46425F196FB08 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C855666FED7BCA616FC487B /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		3CB8CE8BADA68B8671D70216 /* ScooterLockWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F5EE15DE1E01EB27CCB6A4 /* ScooterLockWidget.swift */; };
+		44DC511691A59F925DE05D6C /* LockScooterIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */; };
+		4F012510620266FE6D33B905 /* ScooterLockWidget.appex in Embed Widget Extension */ = {isa = PBXBuildFile; fileRef = D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		555BD73BD82E2061BA88E21F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7571F2580560F583A873ABA7 /* Foundation.framework */; };
 		686B04A3C09A6BD39A264BA3 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EAF34FE7DE4494E95553FBA /* Interface.storyboard */; };
+		6BB315264EA48A4C452155CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5089637BBAE3B5A308ECB71 /* Foundation.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		8CE35D2FD2A33E60A4D6ECD3 /* LockScooterIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -31,6 +38,13 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
+		90D332CD2B2C951149E10ECA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D0AAEB5D6B5A6A1B8F03875;
+			remoteInfo = ScooterLockWidget;
+		};
 		DC031954D1AFBFDCEC276CDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -41,6 +55,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4F5C243480EF43D4C17D5A6A /* Embed Widget Extension */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4F012510620266FE6D33B905 /* ScooterLockWidget.appex in Embed Widget Extension */,
+			);
+			name = "Embed Widget Extension";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,6 +90,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		100D3704F75E31D7709621C7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		144CA86EEC0031A8F636E13C /* LegacyWatchExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LegacyWatchExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
@@ -75,6 +101,7 @@
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		60FFFFC7C45171C2F5D5E915 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EAF34FE7DE4494E95553FBA /* Interface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
+		6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LockScooterIntent.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7571F2580560F583A873ABA7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS11.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -91,6 +118,11 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C017B9AB42E7200F8B5EB7A /* HostingController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HostingController.swift; sourceTree = "<group>"; };
+		ACCA796F1ABC91B28E5B7AE4 /* ScooterLocker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScooterLocker.swift; sourceTree = "<group>"; };
+		B5089637BBAE3B5A308ECB71 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B9DA52350CB7F9004B8806AA /* VicontLockProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VicontLockProtocol.swift; sourceTree = "<group>"; };
+		C3F5EE15DE1E01EB27CCB6A4 /* ScooterLockWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScooterLockWidget.swift; sourceTree = "<group>"; };
+		D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScooterLockWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E45FA603A063C0B0C16F8E6D /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		EA756BAAF3E0EF443ED5F564 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,6 +152,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A704B65A413F229EC23C8C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BB315264EA48A4C452155CA /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -144,12 +184,33 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		29AD618010AB746BA5167539 /* ScooterWidget */ = {
+			isa = PBXGroup;
+			children = (
+				C3F5EE15DE1E01EB27CCB6A4 /* ScooterLockWidget.swift */,
+				100D3704F75E31D7709621C7 /* Info.plist */,
+			);
+			name = ScooterWidget;
+			path = ScooterWidget;
+			sourceTree = "<group>";
+		};
 		331C8082294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 			);
 			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		3DE159E2B0DB932388E5E830 /* ScooterControl */ = {
+			isa = PBXGroup;
+			children = (
+				B9DA52350CB7F9004B8806AA /* VicontLockProtocol.swift */,
+				ACCA796F1ABC91B28E5B7AE4 /* ScooterLocker.swift */,
+				6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */,
+			);
+			name = ScooterControl;
+			path = ScooterControl;
 			sourceTree = "<group>";
 		};
 		801FE450E48527430C7F561D /* watchOS */ = {
@@ -181,6 +242,8 @@
 				20120CA6B5D2A92B6B168DE5 /* Pods */,
 				DA686208CD1B21876619FB1B /* Frameworks */,
 				CD900C7E2B73C417F2E36A55 /* LegacyWatch */,
+				3DE159E2B0DB932388E5E830 /* ScooterControl */,
+				29AD618010AB746BA5167539 /* ScooterWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -191,6 +254,7 @@
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
 				1CD00C683209A88D78DEE246 /* LegacyWatch.app */,
 				144CA86EEC0031A8F636E13C /* LegacyWatchExtension.appex */,
+				D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,12 +284,21 @@
 			path = LegacyWatch;
 			sourceTree = "<group>";
 		};
+		D16E38FF9186C22119A1E958 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B5089637BBAE3B5A308ECB71 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		DA686208CD1B21876619FB1B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				60FFFFC7C45171C2F5D5E915 /* Pods_Runner.framework */,
 				8C855666FED7BCA616FC487B /* Pods_RunnerTests.framework */,
 				801FE450E48527430C7F561D /* watchOS */,
+				D16E38FF9186C22119A1E958 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -233,6 +306,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0D0AAEB5D6B5A6A1B8F03875 /* ScooterLockWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F754E14801F15CBCD0D1FADC /* Build configuration list for PBXNativeTarget "ScooterLockWidget" */;
+			buildPhases = (
+				F31B77A2C029D001FA385B92 /* Sources */,
+				7A704B65A413F229EC23C8C7 /* Frameworks */,
+				ECCD9328B6017760D494E91F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScooterLockWidget;
+			productName = ScooterLockWidget;
+			productReference = D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1392541978356B8F3F41EA65 /* LegacyWatchExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 332100B3A6E84A68CD4CF275 /* Build configuration list for PBXNativeTarget "LegacyWatchExtension" */;
@@ -293,6 +383,7 @@
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
 				9AAA3DFE3EC388FBDBA98A22 /* [CP] Check Pods Manifest.lock */,
+				4F5C243480EF43D4C17D5A6A /* Embed Widget Extension */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -305,6 +396,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				93313DD1C408ABC54E335CD0 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -348,6 +440,7 @@
 				331C8080294A63A400263BE5 /* RunnerTests */,
 				67947D23649DBC9B659A24C4 /* LegacyWatch */,
 				1392541978356B8F3F41EA65 /* LegacyWatchExtension */,
+				0D0AAEB5D6B5A6A1B8F03875 /* ScooterLockWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -376,6 +469,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				686B04A3C09A6BD39A264BA3 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ECCD9328B6017760D494E91F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +622,9 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				0EDF8BF5E7CB12D5E5CF9C78 /* VicontLockProtocol.swift in Sources */,
+				1C975CEE00A403E492A71092 /* ScooterLocker.swift in Sources */,
+				8CE35D2FD2A33E60A4D6ECD3 /* LockScooterIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +633,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				23C39A96F77470C623FA89F4 /* HostingController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F31B77A2C029D001FA385B92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB8CE8BADA68B8671D70216 /* ScooterLockWidget.swift in Sources */,
+				44DC511691A59F925DE05D6C /* LockScooterIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +658,12 @@
 			name = LegacyWatchExtension;
 			target = 1392541978356B8F3F41EA65 /* LegacyWatchExtension */;
 			targetProxy = DC031954D1AFBFDCEC276CDF /* PBXContainerItemProxy */;
+		};
+		93313DD1C408ABC54E335CD0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ScooterLockWidget;
+			target = 0D0AAEB5D6B5A6A1B8F03875 /* ScooterLockWidget */;
+			targetProxy = 90D332CD2B2C951149E10ECA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -954,6 +1072,32 @@
 			};
 			name = Debug;
 		};
+		A52B6352CB63497841893EF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3RLBN9CF8M;
+				INFOPLIST_FILE = ScooterWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.johanstick.escive.lockwidget;
+				PRODUCT_NAME = ScooterLockWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SCOOTER_WIDGET_EXTENSION";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		AA001AC125F57B72D7965B9F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -977,6 +1121,32 @@
 				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Debug;
+		};
+		EB0D97A8A70B9F505AAA2BE3 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3RLBN9CF8M;
+				INFOPLIST_FILE = ScooterWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.johanstick.escive.lockwidget;
+				PRODUCT_NAME = ScooterLockWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SCOOTER_WIDGET_EXTENSION";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
 		};
 		ED2B567761F24DDBE1E1285A /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1002,6 +1172,31 @@
 				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
+		};
+		F8E42CDFD06059DE48B89741 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3RLBN9CF8M;
+				INFOPLIST_FILE = ScooterWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.johanstick.escive.lockwidget;
+				PRODUCT_NAME = ScooterLockWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SCOOTER_WIDGET_EXTENSION";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1052,6 +1247,16 @@
 				5864E63DD7227943CB38C70D /* Release */,
 				AA001AC125F57B72D7965B9F /* Debug */,
 				9EEF119E59AAF44E33AE1626 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F754E14801F15CBCD0D1FADC /* Build configuration list for PBXNativeTarget "ScooterLockWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A52B6352CB63497841893EF8 /* Release */,
+				F8E42CDFD06059DE48B89741 /* Debug */,
+				EB0D97A8A70B9F505AAA2BE3 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:escive/utils/scooter_diagnostics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:escive/bridges/vicont.dart';
@@ -56,6 +57,11 @@ class WatchCompanion {
       try {
         await _channel.invokeMethod('snapshot', {
           'deviceId': device['id'] ?? '',
+          'bluetoothAddress': device['protocol'] == 'vicont'
+              ? (device['bluetoothAddress'] ?? '')
+              : '',
+          'diagnosticsURL': ScooterDiagnostics.instance.endpoint,
+          'diagnosticsToken': ScooterDiagnostics.instance.token,
           'name': device['name'] ?? 'eScive',
           'ready': bridge is VicontBridge && bridge.ready,
           'battery': activity['battery'] ?? 0,

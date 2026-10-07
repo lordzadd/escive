@@ -18,10 +18,23 @@ import WatchConnectivity
         guard call.method == "snapshot", let data = call.arguments as? [String: Any] else {
           result(FlutterMethodNotImplemented); return
         }
-        self?.snapshot = data
+        // Keep widget configuration in the host app. It needs no App Group entitlement.
+        let defaults = UserDefaults.standard
+        if let address = data["bluetoothAddress"] as? String, UUID(uuidString: address) != nil {
+          defaults.set(address, forKey: "scooterWidgetPeripheral")
+        } else {
+          defaults.removeObject(forKey: "scooterWidgetPeripheral")
+        }
+        defaults.set(data["diagnosticsURL"], forKey: "scooterWidgetDiagnosticsURL")
+        defaults.set(data["diagnosticsToken"], forKey: "scooterWidgetDiagnosticsToken")
+        var watchData = data
+        watchData.removeValue(forKey: "diagnosticsURL")
+        watchData.removeValue(forKey: "diagnosticsToken")
+        watchData.removeValue(forKey: "bluetoothAddress")
+        self?.snapshot = watchData
         if WCSession.isSupported(), WCSession.default.activationState == .activated,
            WCSession.default.isPaired, WCSession.default.isWatchAppInstalled {
-          do { try WCSession.default.updateApplicationContext(data) }
+          do { try WCSession.default.updateApplicationContext(watchData) }
           catch { result(FlutterError(code: "watch", message: error.localizedDescription, details: nil)); return }
         }
         result(nil)
