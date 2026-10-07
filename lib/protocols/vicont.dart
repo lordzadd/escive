@@ -90,6 +90,14 @@ class VicontProtocol {
         'imperial': (p[3] & 128) != 0,
         'poweredOn': (p[4] & 1) != 0,
         'locked': (p[4] & 2) != 0,
+        'horn': (p[4] & 4) != 0,
+        'leftIndicator': (p[4] & 8) != 0,
+        'rightIndicator': (p[4] & 16) != 0,
+        'ambientLight': (p[4] & 32) != 0,
+        'bluetoothBound': (p[4] & 64) != 0,
+        'cruiseActive': (p[11] & 1) != 0,
+        'braking': (p[11] & 2) != 0,
+        'brakeLocked': (p[11] & 4) != 0,
         'tripDistanceKm': u16(5) / 100.0,
         'totalDistanceKm': u16(7),
         'faultBits': ((p[11] >> 3) & 15) | ((p[12] & 63) << 4),
@@ -98,12 +106,61 @@ class VicontProtocol {
     }
     if (p[1] == 0x12 && p[2] >= 9) {
       return {
+        'instrumentId': u16(3),
+        'instrumentHardware': p[5],
+        'instrumentSoftware': p[6],
+        'controllerId': u16(7),
+        'controllerHardware': p[9],
+        'controllerSoftware': p[10],
         'gears': [
           for (int i = 0; i < 7; i++)
             if ((p[11] & (1 << i)) != 0) i + 1
         ]
       };
     }
+    if (p[1] == 0x13 && p[2] >= 12) {
+      return {
+        'throttleRaw': u16(3),
+        'brake1Raw': u16(5),
+        'brake2Raw': u16(7),
+        'throttleCalibration': u16(9),
+        'brake1Calibration': u16(11),
+        'brake2Calibration': u16(13),
+      };
+    }
+    if (p[1] == 0x1f && p[2] >= 14) {
+      return {
+        'bmsId': u16(3),
+        'bmsVoltage': u16(5) / 100,
+        'bmsCurrent': u16(7) / 100,
+        'bmsCycles': u16(9),
+        'bmsCapacityRaw': u16(11),
+        'bmsRemainingRaw': u16(13),
+        'bmsTemperature': u16(15),
+        'bmsCharging': (p[4] & 1) != 0,
+        'bmsDischarging': (p[4] & 2) != 0,
+        'bmsLowVoltage': (p[4] & 4) != 0,
+        'bmsOvervoltage': (p[4] & 8) != 0,
+        'bmsFault': (p[4] & 16) != 0,
+      };
+    }
     return {};
   }
+
+  static const faultNames = [
+    'Communication fault',
+    'Battery overvoltage',
+    'Battery undervoltage',
+    'Motor phase fault',
+    'Motor locked rotor',
+    'Hardware overcurrent',
+    'Controller fault',
+    'Throttle sensor fault',
+    'Brake sensor fault',
+    'Motor Hall sensor fault',
+  ];
+  static List<String> faults(int bits) => [
+        for (var i = 0; i < faultNames.length; i++)
+          if (bits & (1 << i) != 0) faultNames[i],
+      ];
 }

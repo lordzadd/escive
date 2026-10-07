@@ -211,3 +211,31 @@ This is user-reported physical evidence, distinct from the synthetic test result
 The user requires Vicont feature parity and clarifies that parking means the electronic scooter lock.
 See VICONT_PARITY.md for the current gaps and source-backed feature inventory.
 Locking and the other device controls remain unconfirmed.
+
+## Expanded Bluetooth release — 1.2.0+9
+
+The user requested implementation and a new IPA for manual testing.
+Added direct parking-lock buttons, expanded controls, mode/unit settings, queried tuning,
+named faults, live diagnostic fields, battery details, and device versions.
+The Vicont dashboard no longer depends on the previously unverified slider gesture.
+Other scooter bridges keep their existing controls.
+
+Thirty automated tests pass. Static analysis reports no issues.
+New checks cover 24 independently generated vendor packet vectors, setting queries and readback,
+zero acknowledgements, tuning ranges, movement rejection, disconnect cleanup, diagnostic decoding,
+and a phone-sized settings dialog with expanded diagnostics.
+Test fixtures use synthetic Bluetooth traffic. They do not prove physical device behavior.
+
+Source: docs/VICONT_PROTOCOL.md and docs/VICONT_PARITY.md.
+Logs: parity-final-tests.txt, parity-final-analyze.txt, and build-1.2.0-release.txt
+under /Users/ritviksharma/Documents/escive-research.
+
+The production entry point is lib/main.dart.
+The IPA is for Signulous signing and manual iPhone testing.
+Cloud services, firmware updates, accessories, and the separate Watch app are not included.
+This release is expanded Bluetooth coverage, not complete Vicont parity.
+
+Release build and IPA archive integrity checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.0-unsigned.ipa`.
+SHA-256: `24c1296ae6bbb4e9e9ca94ef1a4ca8443804f28aaf8641ade8fa924b3f12b2fa`.
+Info.plist confirms version 1.2.0, build 9, and iPhoneOS.

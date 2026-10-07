@@ -1,0 +1,194 @@
+[
+  {
+    "zt": "5a",
+    "code": 67,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA55a4301019f"
+  },
+  {
+    "zt": "5a",
+    "code": 67,
+    "data": [
+      2
+    ],
+    "hex": "FAAFA55a430102a0"
+  },
+  {
+    "zt": "5a",
+    "code": 74,
+    "data": [
+      0
+    ],
+    "hex": "FAAFA55a4a0100a5"
+  },
+  {
+    "zt": "5a",
+    "code": 74,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA55a4a0101a6"
+  },
+  {
+    "zt": "5a",
+    "code": 74,
+    "data": [
+      2
+    ],
+    "hex": "FAAFA55a4a0102a7"
+  },
+  {
+    "zt": "5a",
+    "code": 74,
+    "data": [
+      3
+    ],
+    "hex": "FAAFA55a4a0103a8"
+  },
+  {
+    "zt": "5a",
+    "code": 60,
+    "data": [
+      0
+    ],
+    "hex": "FAAFA55a3c010097"
+  },
+  {
+    "zt": "5a",
+    "code": 60,
+    "data": [
+      25
+    ],
+    "hex": "FAAFA55a3c0119b0"
+  },
+  {
+    "zt": "5a",
+    "code": 61,
+    "data": [
+      140
+    ],
+    "hex": "FAAFA55a3d018c24"
+  },
+  {
+    "zt": "5a",
+    "code": 62,
+    "data": [
+      200
+    ],
+    "hex": "FAAFA55a3e01c861"
+  },
+  {
+    "zt": "5a",
+    "code": 63,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA55a3f01019b"
+  },
+  {
+    "zt": "5a",
+    "code": 63,
+    "data": [
+      66
+    ],
+    "hex": "FAAFA55a3f0142dc"
+  },
+  {
+    "zt": "fa",
+    "code": 67,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA5fa4301013f"
+  },
+  {
+    "zt": "fa",
+    "code": 67,
+    "data": [
+      2
+    ],
+    "hex": "FAAFA5fa43010240"
+  },
+  {
+    "zt": "fa",
+    "code": 74,
+    "data": [
+      0
+    ],
+    "hex": "FAAFA5fa4a010045"
+  },
+  {
+    "zt": "fa",
+    "code": 74,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA5fa4a010146"
+  },
+  {
+    "zt": "fa",
+    "code": 74,
+    "data": [
+      2
+    ],
+    "hex": "FAAFA5fa4a010247"
+  },
+  {
+    "zt": "fa",
+    "code": 74,
+    "data": [
+      3
+    ],
+    "hex": "FAAFA5fa4a010348"
+  },
+  {
+    "zt": "fa",
+    "code": 60,
+    "data": [
+      0
+    ],
+    "hex": "FAAFA5fa3c010037"
+  },
+  {
+    "zt": "fa",
+    "code": 60,
+    "data": [
+      25
+    ],
+    "hex": "FAAFA5fa3c011950"
+  },
+  {
+    "zt": "fa",
+    "code": 61,
+    "data": [
+      140
+    ],
+    "hex": "FAAFA5fa3d018cc4"
+  },
+  {
+    "zt": "fa",
+    "code": 62,
+    "data": [
+      200
+    ],
+    "hex": "FAAFA5fa3e01c801"
+  },
+  {
+    "zt": "fa",
+    "code": 63,
+    "data": [
+      1
+    ],
+    "hex": "FAAFA5fa3f01013b"
+  },
+  {
+    "zt": "fa",
+    "code": 63,
+    "data": [
+      66
+    ],
+    "hex": "FAAFA5fa3f01427c"
+  }
+]

@@ -962,7 +962,7 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildListDelegate(
               [
                 // Slide to Lock/Unlock
-                supportedProperties['lock'] != true ? SizedBox(height: 10) : IgnorePointer(
+                (isVicont || supportedProperties['lock'] != true) ? SizedBox(height: 10) : IgnorePointer(
                   ignoring: !vicontStationary,
                   child: Opacity(opacity: vicontStationary ? 1 : 0.4, child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 48, vertical: 22),
@@ -1034,7 +1034,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 // Row 2/1 with 2 cards
-                (supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true) ? SizedBox() : Padding(
+                (isVicont || (supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true)) ? SizedBox() : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1096,9 +1096,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 if (isVicont) ExpansionTile(
-                  title: const Text('Scooter settings'),
+                  initiallyExpanded: true,
+                  title: const Text('Scooter controls'),
                   subtitle: vicontReady ? null : const Text('Waiting for current scooter data'),
-                  children: const [VicontPanel(showPrimaryControls: false)],
+                  children: const [VicontPanel()],
                 ),
 
                 // Widgets

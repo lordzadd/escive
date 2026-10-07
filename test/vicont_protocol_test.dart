@@ -1,7 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:escive/protocols/vicont.dart';
 
 void main() {
+  test('extended packets match 24 extracted vendor encoder results', () {
+    final vectors =
+        jsonDecode(File('test/vicont_vendor_vectors.json').readAsStringSync())
+            as List;
+    for (final vector in vectors) {
+      final bytes = VicontProtocol.command(int.parse(vector['zt'], radix: 16),
+          vector['code'] as int, List<int>.from(vector['data']));
+      expect(bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+          (vector['hex'] as String).toLowerCase());
+    }
+  });
   test('vendor hello packets retain the unusual FA-header checksum', () {
     expect(VicontProtocol.hello, [
       [250, 175, 165, 90, 1, 0, 91],
@@ -90,6 +103,56 @@ void main() {
     final codec = VicontProtocol();
     expect(codec.add([...live.sublist(0, 15), ...status.sublist(0, 13)]),
         [live.sublist(0, 15), status.sublist(0, 13)]);
+  });
+  test('diagnostics separate status flags from ten fault bits', () {
+    final p = [...status]
+      ..[4] = 0x7f
+      ..[11] = 0xff
+      ..[12] = 0x3f;
+    final result = VicontProtocol.telemetry(p);
+    expect(result['braking'], true);
+    expect(result['cruiseActive'], true);
+    expect(result['brakeLocked'], true);
+    expect(result['charging'], true);
+    expect(result['horn'], true);
+    expect(result['faultBits'], 1023);
+    expect(VicontProtocol.faults(result['faultBits']), hasLength(10));
+    expect(VicontProtocol.faults(0), isEmpty);
+  });
+  test('versions, sensors and battery data decode with field length guards',
+      () {
+    final versions =
+        VicontProtocol.telemetry([90, 18, 9, 1, 2, 3, 4, 5, 6, 7, 8, 7]);
+    expect(versions['instrumentId'], 258);
+    expect(versions['controllerSoftware'], 8);
+    final sensors = VicontProtocol.telemetry(
+        [90, 19, 12, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6]);
+    expect(sensors['brake2Calibration'], 6);
+    final bms = [
+      90,
+      31,
+      14,
+      0,
+      3,
+      16,
+      104,
+      0,
+      250,
+      0,
+      100,
+      1,
+      244,
+      0,
+      250,
+      0,
+      30
+    ];
+    expect(VicontProtocol.telemetry(bms)['bmsVoltage'], 42);
+    expect(VicontProtocol.telemetry(bms)['bmsCurrent'], 2.5);
+    expect(VicontProtocol.telemetry(bms)['bmsCycles'], 100);
+    for (var length = 0; length < bms.length; length++) {
+      expect(VicontProtocol.telemetry(bms.sublist(0, length)), isEmpty);
+    }
   });
   test('disconnect clears an incomplete notification', () {
     final codec = VicontProtocol();

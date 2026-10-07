@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:escive/widgets/vicont_details.dart';
 import 'package:flutter/material.dart';
 import 'package:escive/bridges/vicont.dart';
 import 'package:escive/utils/globals.dart' as globals;
@@ -47,7 +48,7 @@ class _VicontPanelState extends State<VicontPanel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.showPrimaryControls)
-                  Text('Scooter settings',
+                  Text('Parking and riding',
                       style: Theme.of(context).textTheme.titleLarge),
                 Text(ready
                     ? 'Live scooter data'
@@ -60,6 +61,7 @@ class _VicontPanelState extends State<VicontPanel> {
                 if ((a['faultBits'] ?? 0) != 0)
                   Text('Scooter fault code: ${a['faultBits']}',
                       style: const TextStyle(color: Colors.red)),
+                if (widget.showPrimaryControls) const Text('Parking lock'),
                 Wrap(spacing: 8, children: [
                   if (widget.showPrimaryControls)
                     OutlinedButton(
@@ -98,6 +100,8 @@ class _VicontPanelState extends State<VicontPanel> {
                     title: const Text('Start without pushing'),
                     value: a['zeroStart'] == true,
                     onChanged: stationary ? bridge.setZeroStart : null),
+                VicontDetails(
+                    bridge: bridge, activity: a, stationary: stationary),
               ],
             )));
   }

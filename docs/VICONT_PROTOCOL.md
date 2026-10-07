@@ -71,7 +71,7 @@ Controls require recent speed and status packets.
 Lock, gear, cruise, start mode, and find commands require speed at or below 1 km/h.
 This matches the vendor's lock threshold and extends it to these settings.
 Gears remain unavailable until the scooter reports its supported gear mask.
-No speed-limit, firmware, binding, or factory-reset commands are exposed.
+Version 1.2.0 adds queried performance settings. Firmware, binding, and factory-reset commands remain unavailable.
 
 A successful write means only that Bluetooth accepted the packet.
 The screen shows state from incoming telemetry. It does not assume command success.
@@ -125,3 +125,38 @@ Keep the scooter stationary during control tests.
 9. Export the app diagnostics if telemetry does not appear.
 
 Do not rely on the new app as the only way to unlock the scooter until these tests pass.
+
+## Extended Bluetooth controls — 1.2.0
+
+The vendor bundle provides the following additional paths:
+
+| Feature | Source function | Command / values |
+| --- | --- | --- |
+| Units | switchUnitHandle | 0x43: 1 metric, 2 imperial |
+| Work mode | nextModelHandle, lastModelHandle, editModelHandle | 0x4A: 0 query, 1 ECO, 2 COMFORT, 3 SPORT |
+| Matching gear | editGearsHandle | 0x42: 1 ECO, 2 COMFORT, 3 SPORT |
+| Maximum speed | queryDIY, sliderChangeMaximumSpeedNew | 0x3C: 0 query, 1–99 setting; vendor UI uses 99 for full speed |
+| Starting torque | sliderChangeStartingTorque | 0x3D: floor(level / 10 × 200), levels 1–10 |
+| Driving torque | sliderChangeMaximumDrivingTorque | 0x3E: floor(level / 10 × 200), levels 1–10 |
+| Electronic brake | sliderChangeElectromagneticBrakeStrength | 0x3F: floor(level / 9 × 200), levels 0–9; zero encodes as 1 |
+
+The implementation uses read responses to enable mode and tuning controls.
+DIY replies supply the setting at payload byte 0 and may supply a scale at payload byte 1.
+Legacy fallback read scales match queryDIY: 99 for starting torque/brake and 25 for driving torque.
+Write scales remain 200, as in the vendor source.
+Mode response parsing uses the first payload byte under the existing RX framing assumption.
+Real RX captures are still required to validate that assumption on each firmware variant.
+
+The extracted vendor encoder generated 24 additional command fixtures for both header variants.
+Tests compare the new encoder output with these independent fixtures.
+No vendor executable source is committed.
+
+Extended receive fields come from updateBleDeviceInfo:
+
+- 0x11: horn, indicators, ambient-light flag, binding flag, braking, cruise-active, and brake-lock status.
+- 0x12: instrument/controller identifiers and hardware/software versions.
+- 0x13: throttle/brake readings and calibration values.
+- 0x1F: battery-management voltage, current, cycles, capacity, temperature, and flags.
+
+No new hardware control has been physically verified in this release.
+The user's earlier test confirms the existing Bluetooth connection and light only.

@@ -35,7 +35,7 @@ void main() {
     platform.exposeService = true;
     await tester.pumpWidget(MaterialApp(home: Builder(builder: (c) {
       context = c;
-      return const Scaffold(body: VicontPanel());
+      return const Scaffold(body: SingleChildScrollView(child: VicontPanel()));
     })));
   }
 
@@ -114,6 +114,77 @@ void main() {
       await cleanup(tester);
     });
   }
+  testWidgets('extended settings use query responses and vendor write scales',
+      (tester) async {
+    platform.profile = 'fff0';
+    await mount(tester);
+    await connect(tester);
+    final before = platform.writes.length;
+    expect(await bridge.setTuning(0x3d, 5), false);
+    expect(await bridge.setRideMode(1), false);
+    expect(platform.writes.length, before);
+    final values = {0x4a: 1, 0x3c: 25, 0x3d: 100, 0x3e: 120, 0x3f: 66};
+    platform.onWrite = (bytes) {
+      if (bytes.length != 8) return;
+      final code = bytes[4], value = bytes[6];
+      if (!values.containsKey(code)) return;
+      if (value == 0) {
+        platform.notify([90, code, 2, values[code]!, 200]);
+      } else {
+        values[code] = value;
+        // A zero acknowledgement cannot be used as a setting value.
+        platform.notify([90, code, 1, 0]);
+      }
+    };
+    final read = bridge.readSettings();
+    await pumpSteps(tester, 25);
+    await read;
+    expect(bridge.settings[0x3c], 25);
+    expect(bridge.settings[0x3d], 100);
+    expect(bridge.readingSettings, false);
+    final set = bridge.setTuning(0x3d, 7);
+    await pumpSteps(tester, 20);
+    expect(await set, true);
+    expect(values[0x3d], 140);
+    expect(bridge.settings[0x3d], 140);
+    final brake = bridge.setTuning(0x3f, 0);
+    await pumpSteps(tester, 20);
+    expect(await brake, true);
+    expect(values[0x3f], 1);
+    final mode = bridge.setRideMode(3);
+    await pumpSteps(tester, 20);
+    expect(await mode, true);
+    expect(bridge.settings[0x4a], 3);
+    final units = bridge.setUnits(true);
+    await pumpSteps(tester, 5);
+    expect(await units, true);
+    expect(platform.writes.last.value, [250, 175, 165, 90, 67, 1, 2, 160]);
+    expect(await bridge.setTuning(0x3c, 255), false);
+    expect(await bridge.setTuning(0x3f, 10), false);
+    platform.telemetry(speedTenths: 25);
+    await pumpSteps(tester, 2);
+    final count = platform.writes.length;
+    expect(await bridge.setTuning(0x3d, 5), false);
+    expect(await bridge.setUnits(false), false);
+    expect(platform.writes.length, count);
+    platform.onWrite = null;
+    await cleanup(tester);
+    expect(bridge.settings, isEmpty);
+  });
+  testWidgets(
+      'unanswered settings queries stay disabled and clear on disconnect',
+      (tester) async {
+    await mount(tester);
+    await connect(tester);
+    final query = bridge.readSetting(0x3d);
+    await pumpSteps(tester, 5);
+    platform.notify([90, 61, 1, 0]);
+    await pumpSteps(tester, 2);
+    expect(bridge.settings, isEmpty);
+    await tester.runAsync(() => bridge.dispose());
+    expect(await query, false);
+    await cleanup(tester);
+  });
   testWidgets(
       'movement, invalid gear, busy, and write failure do not report success',
       (tester) async {

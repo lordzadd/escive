@@ -26,6 +26,94 @@ class VicontBridge {
   bool _busy = false;
   bool _losing = false;
   final List<int> gears = [];
+  // Session-only capabilities: never enable tuning from cached device values.
+  final Map<int, int> settings = {};
+  final Map<int, int> settingScales = {};
+  final Map<int, Completer<bool>> _queries = {};
+  bool readingSettings = false;
+  String settingsMessage = 'Read scooter settings to load available options.';
+
+  Future<bool> readSetting(int code) async {
+    if (!ready ||
+        _queries.containsKey(code) ||
+        ![0x4a, 0x3c, 0x3d, 0x3e, 0x3f].contains(code)) {
+      return false;
+    }
+    settings.remove(code);
+    final reply = Completer<bool>();
+    _queries[code] = reply;
+    try {
+      if (!await command(code, [0])) return false;
+      return await reply.future
+          .timeout(const Duration(seconds: 2), onTimeout: () => false);
+    } finally {
+      if (identical(_queries[code], reply)) _queries.remove(code);
+    }
+  }
+
+  Future<void> readSettings() async {
+    if (readingSettings || !ready) return;
+    readingSettings = true;
+    settingsMessage = 'Reading scooter settings…';
+    globals.refreshStates(['home']);
+    try {
+      for (final code in [0x4a, 0x3c, 0x3d, 0x3e, 0x3f]) {
+        if (!ready) break;
+        await readSetting(code);
+      }
+      settingsMessage = settings.isEmpty
+          ? 'No settings response. These options may not be supported.'
+          : 'Returned settings loaded. Unavailable options stay disabled.';
+    } finally {
+      readingSettings = false;
+      globals.refreshStates(['home']);
+    }
+  }
+
+  Future<bool> setRideMode(int mode) async {
+    if (!settings.containsKey(0x4a) || mode < 1 || mode > 3) return false;
+    // Vendor work modes: ECO=1, COMFORT=2, SPORT=3; matching gears 1,2,3.
+    final generation = _generation;
+    final gear = mode;
+    if (!gears.contains(gear)) return false;
+    if (!await command(0x42, [gear], stationary: true)) return false;
+    if (generation != _generation) return false;
+    if (!await command(0x4a, [mode], stationary: true)) return false;
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (generation != _generation) return false;
+    return readSetting(0x4a);
+  }
+
+  Future<bool> setUnits(bool imperial) =>
+      command(0x43, [imperial ? 2 : 1], stationary: true);
+
+  Future<bool> setTuning(int code, int level) async {
+    if (!settings.containsKey(code) ||
+        ![0x3c, 0x3d, 0x3e, 0x3f].contains(code)) {
+      return false;
+    }
+    final generation = _generation;
+    final maximum = code == 0x3c
+        ? 99
+        : code == 0x3f
+            ? 9
+            : 10;
+    final minimum = code == 0x3f ? 0 : 1;
+    if (level < minimum || level > maximum) return false;
+    // Match the vendor's write scale (200), not its legacy read scale.
+    final raw = code == 0x3c
+        ? level
+        : code == 0x3f
+            ? (level == 0 ? 1 : (level / 9 * 200).floor())
+            : level * 20;
+    if (!await command(code, [raw], stationary: true)) return false;
+    // An acknowledgement is not a setting value. Read back after the write.
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (generation != _generation) return false;
+    settings.remove(code);
+    globals.refreshStates(['home']);
+    return readSetting(code);
+  }
 
   bool get ready =>
       _header != null &&
@@ -151,6 +239,26 @@ class VicontBridge {
     logarte.log(
         'Vicont RX: ${bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
     for (final frame in _decoder.add(bytes)) {
+      final code = frame[1];
+      if (_queries.containsKey(code) && frame[2] >= 1) {
+        final value = frame[3];
+        final valid = code == 0x4a
+            ? value >= 1 && value <= 3
+            : code == 0x3c
+                ? value >= 1 && value <= 100
+                : value >= 1 && value <= 200;
+        if (valid) {
+          settings[code] = value;
+          settingScales[code] = frame[2] >= 2 && frame[4] > 0
+              ? frame[4]
+              : code == 0x3e
+                  ? 25
+                  : 99;
+          final query = _queries.remove(code)!;
+          if (!query.isCompleted) query.complete(true);
+          globals.refreshStates(['home']);
+        }
+      }
       final values = VicontProtocol.telemetry(frame);
       if (values.isEmpty) continue;
       _header = frame[0];
@@ -269,6 +377,12 @@ class VicontBridge {
     _lastStatus = null;
     _decoder.clear();
     gears.clear();
+    settings.clear();
+    settingScales.clear();
+    for (final query in _queries.values) {
+      if (!query.isCompleted) query.complete(false);
+    }
+    _queries.clear();
     if (device != null) {
       try {
         await device.disconnect();

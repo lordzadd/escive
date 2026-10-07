@@ -10,8 +10,8 @@ void main() {
     globals.currentDevice = {
       'currentActivity': {'locked': false, 'light': false}
     };
-    await tester
-        .pumpWidget(const MaterialApp(home: Scaffold(body: VicontPanel())));
+    await tester.pumpWidget(const MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: VicontPanel()))));
     expect(find.text('Waiting for current scooter data'), findsOneWidget);
     expect(find.text('Available gears appear when the scooter reports them.'),
         findsOneWidget);
@@ -28,8 +28,8 @@ void main() {
   });
   testWidgets('Vicont panel is absent for other bridges', (tester) async {
     globals.bridge = null;
-    await tester
-        .pumpWidget(const MaterialApp(home: Scaffold(body: VicontPanel())));
+    await tester.pumpWidget(const MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: VicontPanel()))));
     expect(find.text('Scooter settings'), findsNothing);
   });
 }

@@ -5,9 +5,12 @@ Hardware compatibility is not yet verified.
 
 ## Ready for signing
 
-The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.1.2-unsigned.ipa`.
+The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.2.0-unsigned.ipa`.
 Sign the IPA with your signing service before installation.
-Version 1.1.2 includes the control refresh fix, original lock and light controls, and dashboard runtime fixes.
+Version 1.2.0 adds visible parking controls, ride modes, scooter units, performance settings, and detailed diagnostics.
+Tap Read scooter settings to load supported mode and tuning controls.
+Settings remain unavailable when the scooter does not respond.
+This build does not implement Vicont cloud services, firmware updates, or model-specific accessories.
 The IPA contains the phone app. The legacy watch app is separate.
 Hardware operation remains unverified. The user will test this version manually.
 

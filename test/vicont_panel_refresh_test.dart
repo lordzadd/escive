@@ -31,8 +31,8 @@ void main() {
     globals.currentDevice = {
       'currentActivity': {'locked': false, 'light': false, 'speedKmh': 0}
     };
-    await tester
-        .pumpWidget(const MaterialApp(home: Scaffold(body: VicontPanel())));
+    await tester.pumpWidget(const MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: VicontPanel()))));
     expect(find.text('Waiting for current scooter data'), findsOneWidget);
 
     bridge.connected = true;
