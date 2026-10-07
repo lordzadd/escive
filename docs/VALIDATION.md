@@ -203,3 +203,11 @@ Signulous must sign this unsigned IPA before installation.
 The 24-test pass and clean analysis from the preceding QA pass apply to the same application logic.
 Only the application version and documentation changed for this packaging step.
 Physical controls, the slider gesture, and Watch operation remain manual test items.
+
+## User device feedback — 1.1.2
+
+The user reports that Bluetooth connection and the light work.
+This is user-reported physical evidence, distinct from the synthetic test results above.
+The user requires Vicont feature parity and clarifies that parking means the electronic scooter lock.
+See VICONT_PARITY.md for the current gaps and source-backed feature inventory.
+Locking and the other device controls remain unconfirmed.
