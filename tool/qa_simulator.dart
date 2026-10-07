@@ -17,10 +17,7 @@ void main() {
     if (bytes.length != 8) return;
     switch (bytes[4]) {
       case 0x33:
-        electronic = bytes[6] == 1;
-        break;
-      case 0x4c:
-        locked = bytes[6] == 1;
+        electronic = locked = bytes[6] == 2;
         break;
       case 0x45:
         light = bytes[6] == 2;

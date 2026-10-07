@@ -326,3 +326,24 @@ All 35 tests pass. Static analysis reports no issues.
 Release build and IPA archive checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.2-lock-sequence-test-unsigned.ipa` (version 1.2.2, build 11).
 SHA-256: `81169b383d954dc357597f8b8937a6b93b8dac050eb7818abfe393e63da99777`.
+
+## APK-traced lock correction — 1.2.3+12
+
+Completed native APK decompilation and the JavaScript main-screen lock trace.
+See APK_LOCK_TRACE.md for source locations, execution fixtures, and decompilation limits.
+The actual main-screen toggle uses the opposite lock payload from the original implementation.
+Corrected lock to 0x33/02 and unlock to 0x33/01.
+Removed the unconfirmed 0x4C sequence. No accessory 0x3A command remains in the lock action.
+
+All 36 tests pass. Static analysis has no findings.
+Eight new fixtures come from executing extracted vendor toggle, encoder, and transport functions with mocked platform calls.
+Tests also cover missing feedback and disconnects.
+The main dashboard file is identical to the 1.1.2 layout.
+The user still needs to verify physical P and immobilization.
+
+Saved the requested follow-through rule in the global Codex AGENTS.md,
+the project's .cursor/rules/follow-through.mdc, and an authorized persistent-memory update note.
+
+Release build and IPA integrity checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.3-apk-traced-lock-unsigned.ipa`.
+SHA-256: `0f158dd3da915f57fd370721d8a573b8cd7f9444098571f843dafb64d00025c3`.

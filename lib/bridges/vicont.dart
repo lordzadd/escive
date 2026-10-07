@@ -355,8 +355,8 @@ class VicontBridge {
     _parkingOperation = true;
     final generation = _generation;
     try {
-      var revision = _statusRevision;
-      if (!await command(0x33, [state ? 1 : 2],
+      final revision = _statusRevision;
+      if (!await command(0x33, [state ? 2 : 1],
           stationary: true, parkingSequence: true)) {
         return false;
       }
@@ -366,23 +366,10 @@ class VicontBridge {
         throw StateError('Electronic lock response not confirmed.');
       }
       if (generation != _generation || !ready) return false;
-      final activity = _saved['currentActivity'] as Map;
-      // Mirror Vicont's versionType=1 follow-up only during the user's lock action.
-      // Do not change binding automatically on connection or unsolicited telemetry.
-      if (activity['bluetoothBound'] != state) {
-        revision = _statusRevision;
-        if (!await command(0x4c, [state ? 1 : 2],
-            stationary: true, parkingSequence: true)) {
-          return false;
-        }
-      }
-      final confirmed = await _waitParkingStatus(
-          generation,
-          revision,
-          (a) =>
-              a['electronicLocked'] == state &&
-              a['brakeLocked'] == state &&
-              a['bluetoothBound'] == state);
+      // Match the extracted main-screen LockCar path. Do not infer versionType
+      // from a binding flag or send the model-specific 0x4c command.
+      final confirmed = await _waitParkingStatus(generation, revision,
+          (a) => a['electronicLocked'] == state && a['brakeLocked'] == state);
       if (!confirmed) {
         throw StateError(
             'Parking state not confirmed. Check P on the scooter.');

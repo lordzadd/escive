@@ -70,15 +70,14 @@ void main() {
       expect(globals.currentDevice['currentActivity']['battery'], 75);
       expect(globals.currentDevice['stats']['totalDistanceKm'], 69);
       expect(bridge.gears, [1, 3, 7]);
-      var electronic = false, parking = false, bound = false;
+      var electronic = false, parking = false;
       platform.onWrite = (bytes) {
-        if (bytes.length != 8 || ![0x33, 0x4c].contains(bytes[4])) return;
-        if (bytes[4] == 0x33) electronic = bytes[6] == 1;
-        if (bytes[4] == 0x4c) parking = bound = bytes[6] == 1;
+        if (bytes.length != 8 || bytes[4] != 0x33) return;
+        electronic = parking = bytes[6] == 2;
         platform.telemetry(
             locked: electronic,
             brakeLocked: parking,
-            bluetoothBound: bound,
+            bluetoothBound: true,
             gearMask: 0x45);
       };
       final commands = <Future<bool> Function()>[
@@ -94,8 +93,8 @@ void main() {
         () => bridge.findScooter(),
       ];
       final payloads = [
-        [76, 1],
-        [76, 2],
+        [51, 2],
+        [51, 1],
         [69, 2],
         [69, 1],
         [66, 3],
@@ -242,7 +241,7 @@ void main() {
     platform.onWrite = (bytes) {
       if (bytes.length == 8) {
         platform.telemetry(
-            locked: true, brakeLocked: false, bluetoothBound: bytes[4] == 0x4c);
+            locked: true, brakeLocked: false, bluetoothBound: true);
       }
     };
     final result = bridge.setLock(true);

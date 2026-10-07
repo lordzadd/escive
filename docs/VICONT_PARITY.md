@@ -8,8 +8,8 @@ The user clarifies that parking means locking the scooter, not saving its locati
 Physical locking has not yet been reported as working.
 
 Version 1.2.0 exposes this function as direct Lock / Unlock buttons under Parking lock.
-The buttons send Vicont command 0x33 with 01 for lock and 02 for unlock.
-The inspected vendor function `setLockHandle` sends the same command.
+The corrected main-screen mapping uses 0x33 with 02 for lock and 01 for unlock.
+See APK_LOCK_TRACE.md for the corrected main-screen trace and the separate instrument-panel path.
 This must not be confused with the separate accessory brake-lock command 0x3A.
 
 ## Why the interface is sparse
@@ -95,3 +95,5 @@ This is expanded local Bluetooth coverage, not complete Vicont parity.
 Cloud account services, binding/sharing, cellular control, firmware updates, ambient-light configuration,
 accessory actions, and exact vendor trip synchronization remain missing.
 The shared vendor bundle does not establish this scooter model's accessory support.
+
+The current 1.2.3 build retains the restored 1.1.2 dashboard. Historical layout descriptions above apply to 1.2.0.

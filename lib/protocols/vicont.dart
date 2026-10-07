@@ -25,7 +25,7 @@ class VicontProtocol {
   }
 
   static List<int> lock(int header, bool locked) =>
-      command(header, 0x33, [locked ? 1 : 2]);
+      command(header, 0x33, [locked ? 2 : 1]);
   static List<int> light(int header, bool on) =>
       command(header, 0x45, [on ? 2 : 1]);
   static List<int> gear(int header, int gear) {

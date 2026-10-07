@@ -1,0 +1,82 @@
+[
+  {
+    "os": "Android",
+    "header": "5a",
+    "currentElectronicLock": 0,
+    "payload": [
+      2
+    ],
+    "hex": "faafa55a33010290",
+    "type": "writeNoResponse"
+  },
+  {
+    "os": "Android",
+    "header": "5a",
+    "currentElectronicLock": 1,
+    "payload": [
+      1
+    ],
+    "hex": "faafa55a3301018f",
+    "type": "writeNoResponse"
+  },
+  {
+    "os": "Android",
+    "header": "fa",
+    "currentElectronicLock": 0,
+    "payload": [
+      2
+    ],
+    "hex": "faafa5fa33010230",
+    "type": "writeNoResponse"
+  },
+  {
+    "os": "Android",
+    "header": "fa",
+    "currentElectronicLock": 1,
+    "payload": [
+      1
+    ],
+    "hex": "faafa5fa3301012f",
+    "type": "writeNoResponse"
+  },
+  {
+    "os": "iOS",
+    "header": "5a",
+    "currentElectronicLock": 0,
+    "payload": [
+      2
+    ],
+    "hex": "faafa55a33010290",
+    "type": "write"
+  },
+  {
+    "os": "iOS",
+    "header": "5a",
+    "currentElectronicLock": 1,
+    "payload": [
+      1
+    ],
+    "hex": "faafa55a3301018f",
+    "type": "write"
+  },
+  {
+    "os": "iOS",
+    "header": "fa",
+    "currentElectronicLock": 0,
+    "payload": [
+      2
+    ],
+    "hex": "faafa5fa33010230",
+    "type": "write"
+  },
+  {
+    "os": "iOS",
+    "header": "fa",
+    "currentElectronicLock": 1,
+    "payload": [
+      1
+    ],
+    "hex": "faafa5fa3301012f",
+    "type": "write"
+  }
+]

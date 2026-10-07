@@ -4,6 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:escive/protocols/vicont.dart';
 
 void main() {
+  test('lock matches executed APK main-screen toggle through its transport',
+      () {
+    final fixtures = jsonDecode(
+        File('test/vicont_lock_main_screen_vectors.json')
+            .readAsStringSync()) as List;
+    for (final fixture in fixtures) {
+      final bytes = VicontProtocol.lock(int.parse(fixture['header'], radix: 16),
+          fixture['currentElectronicLock'] == 0);
+      expect(bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+          fixture['hex']);
+    }
+  });
   test('extended packets match 24 extracted vendor encoder results', () {
     final vectors =
         jsonDecode(File('test/vicont_vendor_vectors.json').readAsStringSync())
@@ -22,9 +34,9 @@ void main() {
     ]);
   });
   test('commands match independently recovered vendor encoder vectors', () {
-    expect(VicontProtocol.lock(0x5a, true), [250, 175, 165, 90, 51, 1, 1, 143]);
+    expect(VicontProtocol.lock(0x5a, true), [250, 175, 165, 90, 51, 1, 2, 144]);
     expect(
-        VicontProtocol.lock(0x5a, false), [250, 175, 165, 90, 51, 1, 2, 144]);
+        VicontProtocol.lock(0x5a, false), [250, 175, 165, 90, 51, 1, 1, 143]);
     expect(
         VicontProtocol.light(0x5a, true), [250, 175, 165, 90, 69, 1, 2, 162]);
     expect(

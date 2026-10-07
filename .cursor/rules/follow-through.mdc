@@ -1,0 +1,15 @@
+---
+description: Follow through on actionable findings and preserve the agreed interface
+alwaysApply: true
+---
+
+## Follow through on actionable findings
+
+- Treat a request to investigate or fix an issue as authorization to do the related work.
+- When you identify a necessary next step, do it before ending the turn.
+- Do not stop at saying what you should have inspected or offering to continue.
+- Stop only for missing evidence, a real blocker, or an action that needs user approval.
+- State the exact blocker and complete all independent work first.
+- Preserve the agreed UI during protocol and bug fixes unless the user requests a layout change.
+- Trace the complete source path before changing reverse-engineered behavior.
+- Separate source evidence, automated tests, and physical verification.

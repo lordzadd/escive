@@ -59,8 +59,8 @@ The extracted vendor encoder was executed locally to check the test vectors.
 
 | Action | Command | Payload | Evidence |
 | --- | --- | --- | --- |
-| Lock | `33` | `01` | `setLockHandle`, lines 111805–111816; lock UI, 35625–35839 |
-| Unlock | `33` | `02` | Same |
+| Lock (main-screen toggle) | `33` | `02` | `sendSwitch`, lines 123964–124032; home handler around 15782; see APK_LOCK_TRACE.md |
+| Unlock (main-screen toggle) | `33` | `01` | Same |
 | Headlight on/off | `45` | `02` / `01` | `sendSwitch(69, ...)`, 14992; encoder selection, 124009–124025 |
 | Select gear | `42` | Gear number, 1–7 | `editGearsHandle`, 111503–111545 |
 | Cruise on/off | `36` | `02` / `01` | `sendSwitch(54, ...)`, 15584; shared switch encoder |
