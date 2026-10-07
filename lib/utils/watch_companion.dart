@@ -8,9 +8,11 @@ import 'package:escive/utils/globals.dart' as globals;
 class WatchCompanion {
   static const _channel = MethodChannel('escive/watch');
   static Timer? _timer;
+  static bool _installationReported = false;
   static void stop() {
     _timer?.cancel();
     _timer = null;
+    _installationReported = false;
     _channel.setMethodCallHandler(null);
   }
 
@@ -55,6 +57,19 @@ class WatchCompanion {
       final bridge = globals.bridge;
       final activity = device['currentActivity'] as Map? ?? {};
       try {
+        if (!_installationReported) {
+          final installation =
+              await _channel.invokeMapMethod<String, dynamic>('installation');
+          if (installation != null) {
+            debugPrint('eScive installation audit: $installation');
+            ScooterDiagnostics.instance.record('device', {
+              'source': 'installation',
+              for (final entry in installation.entries)
+                if (entry.value != null) entry.key: entry.value as Object,
+            });
+            _installationReported = true;
+          }
+        }
         await _channel.invokeMethod('snapshot', {
           'deviceId': device['id'] ?? '',
           'bluetoothAddress': device['protocol'] == 'vicont'

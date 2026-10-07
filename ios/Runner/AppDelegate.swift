@@ -15,6 +15,22 @@ import WatchConnectivity
       let channel = FlutterMethodChannel(name: "escive/watch", binaryMessenger: controller.binaryMessenger)
       watchChannel = channel
       channel.setMethodCallHandler { [weak self] call, result in
+        if call.method == "installation" {
+          let bundle = Bundle.main
+          let extensions = (try? FileManager.default.contentsOfDirectory(at: bundle.builtInPlugInsURL ?? bundle.bundleURL.appendingPathComponent("PlugIns"), includingPropertiesForKeys: nil)) ?? []
+          result([
+            "version": bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
+            "build": bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
+            "bundleId": bundle.bundleIdentifier ?? "unknown",
+            "extensions": extensions.compactMap { url -> [String: String]? in
+              guard url.pathExtension == "appex", let plugin = Bundle(url: url) else { return nil }
+              return ["id": plugin.bundleIdentifier ?? "unknown", "name": url.lastPathComponent,
+                      "version": plugin.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"]
+            },
+            "shortcutTitles": UIApplication.shared.shortcutItems?.map { $0.localizedTitle } ?? []
+          ])
+          return
+        }
         guard call.method == "snapshot", let data = call.arguments as? [String: Any] else {
           result(FlutterMethodNotImplemented); return
         }

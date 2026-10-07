@@ -40,6 +40,9 @@ void main() {
     final snapshots = <Map>[];
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('escive/watch'), (call) async {
+      if (call.method == 'installation') {
+        return {'version': 'test', 'build': '0'};
+      }
       snapshots.add(call.arguments as Map);
       return null;
     });

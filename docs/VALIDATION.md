@@ -432,3 +432,30 @@ See LOCK_SCREEN_WIDGET.md for installation steps and architecture.
 Release build, embedded extension metadata, version matching, and IPA integrity checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.7-lockscreen-widget-unsigned.ipa`.
 SHA-256: `5933806f813ff0cdceb21ff91ce8468b41ebd08ca74b174ff124391ceba30455`.
+
+## Installation failure reproduced and repaired — 1.2.8+17
+
+The user reports that the phone still shows 1.2.4 (#13) after transferring the widget IPA.
+The supplied 1.2.7 IPA has version 1.2.7/build 16 but omits CFBundleName in the widget extension.
+The simulator installer rejects that bundle with IXUserPresentableErrorDomain code 1:
+"does not have a CFBundleName key with a non-zero length string value in its Info.plist".
+A successful compile and ZIP check did not establish installability. The earlier handoff checks were insufficient.
+This failure can leave the existing app installed. The exact phone signing/install result was not captured.
+
+Added the required widget CFBundleName. The corrected simulator build installs successfully.
+The running app reports version 1.2.8/build 17 and the embedded ScooterLockWidget.appex.
+Its actual UIApplication shortcut titles are Lock vehicle, Unlock vehicle, Toggle light, and 4th speed profile.
+No further quick-action translation change is necessary based on this runtime result.
+SpringBoard registers an enabled Scooter lock descriptor with supportedFamilies=(accessoryCircular).
+This is runtime registration evidence, not a visual inspection of the phone's widget picker or a physical Bluetooth test.
+
+Added tool/verify_ipa.py. It rejects the old 1.2.7 package for the missing key.
+The script checks required host/extension keys, executable paths, version matching, and intent metadata.
+The test build displays eScive 1.2.8 to distinguish it from the old installation.
+The app now reports installed version/build, bundle ID, embedded extensions, and actual shortcut titles to diagnostics.
+Credentials are not part of that report.
+All 40 Flutter tests and static analysis pass.
+
+Release IPA passes the new required-key and embedded-extension checks.
+Artifact: `build/ios/ipa/eScive-1.2.8-BUILD-17-INSTALL-FIX.ipa`.
+SHA-256: `e4889548e818465b3ba1c46746ea0422a323fc563fde9a66de6c2de7784ab03c`.

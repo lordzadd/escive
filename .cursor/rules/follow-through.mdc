@@ -20,3 +20,5 @@ alwaysApply: true
 - Run `python3 diagnostics-server/read_events.py` from the repository root. Setup and limits are in `diagnostics-server/README.md`.
 - Keep `.diagnostics` credentials private. Never print them or commit them.
 - Separate synthetic test sessions from device sessions. Server receipt does not prove physical P or wheel immobilization.
+- Before handing off an IPA with extensions, run `tool/verify_ipa.py` and verify a corresponding simulator build installs. Build success alone does not establish installability.
+- Check the uploaded installation report for the actual phone version and embedded extensions before attributing missing features to signing or user actions.
