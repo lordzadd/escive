@@ -253,3 +253,18 @@ The inspected bundle contains electronic-lock command 0x33 and a separate brake-
 Neither the label nor shared source alone establishes which control this model uses.
 The next evidence needed is the exact Vicont control label/screen and the observed result when eScive sends Lock.
 Do not change the dashboard layout again as part of protocol work.
+
+### Physical parking behavior clarified
+
+The user reports that our app shows locked without immobilizing the scooter.
+Vicont locking displays P on the scooter and prevents movement.
+This invalidates treating the electronic-lock flag alone as physical parking confirmation.
+
+Further source inspection identifies a model-dependent follow-up in updateBleDeviceInfo.
+When deviceInfo.versionType equals 1, Vicont sends command 0x4C with 01 when
+lockCarState is 1 and bluetoothBindingStatus is 0; it sends 02 for the opposite mismatch.
+Our bridge does not implement this follow-up.
+This is a candidate cause, not a confirmed diagnosis for this scooter.
+Do not send 0x4C or substitute the accessory command 0x3A without matching model/state evidence.
+The current 1.2.0 Live diagnostics section exposes Parking lock, Brake lock, and Bluetooth binding
+for comparing Vicont's physical P state against the failed eScive lock attempt.
