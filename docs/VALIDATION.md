@@ -239,3 +239,17 @@ Release build and IPA archive integrity checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.0-unsigned.ipa`.
 SHA-256: `24c1296ae6bbb4e9e9ca94ef1a4ca8443804f28aaf8641ade8fa924b3f12b2fa`.
 Info.plist confirms version 1.2.0, build 9, and iPhoneOS.
+
+## Layout restoration and failed lock report
+
+The user reports that locking does not work in 1.2.0 and objects to repeated layout changes.
+The source now restores the exact HomeScreen layout from 1.1.2.
+The original lock slider and light switch return. Additional features remain inside Scooter settings.
+Static analysis passes. This restoration has not yet been packaged as an IPA.
+
+The lock failure remains unresolved. Do not count command-vector tests as physical acceptance.
+The user suggests the Vicont control may be named parking brake.
+The inspected bundle contains electronic-lock command 0x33 and a separate brake-lock handler for 0x3A.
+Neither the label nor shared source alone establishes which control this model uses.
+The next evidence needed is the exact Vicont control label/screen and the observed result when eScive sends Lock.
+Do not change the dashboard layout again as part of protocol work.
