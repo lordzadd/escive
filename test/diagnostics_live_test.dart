@@ -18,6 +18,11 @@ void main() {
             .statusCode,
         401);
     diagnostics.record('parking', {'synthetic': true, 'requested': true});
+    diagnostics.record('rx', {
+      'synthetic': true,
+      'bytes': [250, 175]
+    });
+    diagnostics.record('device', {'synthetic': true, 'name': 'QA only'});
     await diagnostics.flush();
     final reply = await http.get(url, headers: {
       'Authorization':

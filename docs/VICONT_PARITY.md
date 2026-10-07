@@ -130,3 +130,21 @@ accessory actions, and exact vendor trip synchronization remain missing.
 The shared vendor bundle does not establish this scooter model's accessory support.
 
 The current 1.2.3 build retains the restored 1.1.2 dashboard. Historical layout descriptions above apply to 1.2.0.
+
+## 039ZQ-31 device acceptance — 2026-10-07
+
+The user reports that the lock functionality now works with version 1.2.4.
+The real device session contains 297 events, separate from the earlier synthetic upload test.
+Lock sends 0x33/02 and confirms electronic lock plus brake lock after about 1.38 seconds.
+Unlock sends 0x33/01 and confirms both flags off after about 0.52 seconds.
+Binding follows each transition without any 0x4C command from this app.
+This establishes that the prior binding follow-up experiment is unnecessary for this observed session.
+The session contains no write_error event or nonzero fault bits.
+It does not establish that all future sessions or all hardware variants behave the same way.
+
+The device advertises gears 1, 2, and 3.
+It answers queries 0x4A, 0x3C, 0x3D, 0x3E, and 0x3F.
+Returned setting bytes are [3], [31,31], [30,99], [14,14], and [60,99], respectively.
+These replies establish query support, not physical acceptance of all tuning writes.
+Version bytes: instrument hardware 204/software 60; controller hardware 10/software 49.
+These are raw values. Do not infer the vendor server's versionType from them.

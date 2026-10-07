@@ -370,3 +370,24 @@ Private credentials remain outside Git in the ignored .diagnostics directory.
 Release build and IPA archive checks pass. The read credential is absent from the IPA.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.4-railway-diagnostics-unsigned.ipa`.
 SHA-256: `1e3ec57297c2c3e152825f608749b060038f3e618b7edc652789f4463d6f8a45`.
+
+## Scroll continuity and expanded diagnostics — 1.2.5+14
+
+The user confirms the lock now works and reports poor scrolling with the readout expanded.
+The dashboard rebuilt its snapSizes list on each live update.
+The installed Flutter implementation compares that list by identity and calls goBallistic(0) when it changes.
+That call can cancel an active drag or interrupt scrolling through the long readout.
+DashboardSheet now uses implicit minimum/maximum snap points, with the same dimensions and animation.
+The visual layout and Bluetooth commands remain unchanged.
+
+A widget regression reproduces dragging and readout scrolling across status rebuilds.
+It fails with the original snapSizes allocation and passes after the fix.
+This proves gesture continuity in the widget test, not subjective smoothness on the user's phone.
+The user also authorizes broader diagnostic collection.
+The new build records all received Bluetooth bytes, decoded fields, and saved scooter identity fields.
+Access credentials remain private. Existing 1.2.4 uploads remain compatible with the collector.
+
+All 40 app tests pass; the separate live collector test also passes with expanded event types.
+Static analysis, the server test, the release build, and the IPA archive check pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.5-scroll-fix-unsigned.ipa`.
+SHA-256: `822a3424b797311da3eb3c037dc2e035d60210ca115a86e7f97f44bcbb06a2be`.

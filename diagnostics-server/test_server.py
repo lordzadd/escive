@@ -39,9 +39,12 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual(self.request('POST', server.UPLOAD, [event]*101)[0], 400)
         self.assertEqual(self.request('POST', server.UPLOAD, [{'bad': 1}])[0], 400)
         self.assertEqual(self.request('POST', server.UPLOAD, [event])[0], 202)
+        for kind in ['rx', 'device']:
+            extra = {**event, 'kind': kind, 'data': {'synthetic': True}}
+            self.assertEqual(self.request('POST', server.UPLOAD, [extra])[0], 202)
         status, rows = self.request('GET', server.READ)
         self.assertEqual(status, 200)
-        self.assertEqual(rows[0]['data'], {'requested': True})
+        self.assertTrue(any(row['data'] == {'requested': True} for row in rows))
         with server.database() as db:
             db.execute('UPDATE events SET received=0')
         self.assertEqual(self.request('GET', server.READ)[1], [])

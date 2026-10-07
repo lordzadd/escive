@@ -25,9 +25,10 @@ The upload token is recoverable from a distributed IPA; treat it as upload-only 
 ## Evidence
 
 The app records a random session ID, UTC time, connection state, outgoing Bluetooth bytes,
-selected decoded telemetry, write failures, and parking request/result events.
+all received Bluetooth bytes, all decoded scooter telemetry, write failures, and parking request/result events.
 Telemetry includes electronic lock, brake lock, Bluetooth binding, speed, gears, and firmware version bytes.
-It excludes GPS, Bluetooth addresses, scooter serials, account details, and raw incoming packets.
+From 1.2.5, it also includes the saved scooter name, Bluetooth address, and protocol.
+The user authorizes expanded scooter logging. It does not collect unrelated account credentials or GPS.
 A result confirms reported state only. The user must still report physical P and immobilization.
 
 Uploads run every five seconds, in batches of up to 100 events.

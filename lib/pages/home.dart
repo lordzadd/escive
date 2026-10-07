@@ -1,4 +1,5 @@
 import 'package:escive/bridges/vicont.dart';
+import 'package:escive/widgets/dashboard_sheet.dart';
 import 'package:escive/widgets/vicont_panel.dart';
 import 'package:escive/main.dart';
 import 'package:escive/pages/add_device.dart';
@@ -1407,13 +1408,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 // Sheet
-                DraggableScrollableSheet(
-                  initialChildSize: supportedProperties['battery'] != true ? 0.45 : 0.37, // initial height
-                  minChildSize: supportedProperties['battery'] != true ? 0.45 : 0.37, // min height
-                  maxChildSize: 0.975, // max height
-                  snap: true,
-                  snapSizes: [supportedProperties['battery'] != true ? 0.45 : 0.37, 0.975],
-                  snapAnimationDuration: Duration(milliseconds: 200),
+                DashboardSheet(
+                  hasBattery: supportedProperties['battery'] == true,
                   builder: (BuildContext context, scrollController) {
                     return _buildSheet(scrollController: scrollController);
                   },

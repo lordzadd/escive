@@ -146,6 +146,10 @@ class VicontBridge {
   Future<void> init(BuildContext context) async {
     _context = context;
     _saved = globals.currentDevice;
+    ScooterDiagnostics.instance.record('device', {
+      for (final key in ['name', 'bluetoothAddress', 'protocol'])
+        if (_saved[key] != null) key: _saved[key] as Object,
+    });
     final generation = ++_generation;
     _retry?.cancel();
     final connectedAt = DateTime.now();
@@ -249,6 +253,7 @@ class VicontBridge {
   }
 
   void _receive(List<int> bytes) {
+    ScooterDiagnostics.instance.record('rx', {'bytes': bytes});
     logarte.log(
         'Vicont RX: ${bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
     for (final frame in _decoder.add(bytes)) {
@@ -286,35 +291,12 @@ class VicontBridge {
         values['electronicLocked'] = values['locked'];
         values['locked'] = values['brakeLocked'];
       }
-      if ([0x10, 0x11, 0x12].contains(code)) {
-        const allowed = {
-          'speedKmh',
-          'battery',
-          'voltage',
-          'locked',
-          'electronicLocked',
-          'brakeLocked',
-          'bluetoothBound',
-          'gear',
-          'braking',
-          'faultBits',
-          'gears',
-          'controllerHardware',
-          'controllerSoftware',
-          'instrumentHardware',
-          'instrumentSoftware',
-          'cruise',
-          'zeroStart',
-          'light'
-        };
-        ScooterDiagnostics.instance.record('telemetry', {
-          'code': code,
-          'header': frame[0],
-          for (final entry in values.entries)
-            if (allowed.contains(entry.key) && entry.value != null)
-              entry.key: entry.value as Object,
-        });
-      }
+      ScooterDiagnostics.instance.record('telemetry', {
+        'code': code,
+        'header': frame[0],
+        for (final entry in values.entries)
+          if (entry.value != null) entry.key: entry.value as Object,
+      });
       _header = frame[0];
       if (frame[1] == 0x10) _lastSpeed = DateTime.now();
       if (frame[1] == 0x11) {

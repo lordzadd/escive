@@ -68,7 +68,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError()
                 if not isinstance(e['time'], str) or len(e['time']) > 40:
                     raise ValueError()
-                if e['kind'] not in ['state', 'tx', 'telemetry', 'parking', 'write_error']:
+                if e['kind'] not in ['state', 'tx', 'rx', 'device', 'telemetry', 'parking', 'write_error']:
                     raise ValueError()
                 if not isinstance(e['data'], dict) or len(json.dumps(e)) > 4096:
                     raise ValueError()

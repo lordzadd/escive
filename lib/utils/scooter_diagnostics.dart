@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 /// Enabled only in a diagnostic build with an HTTPS collector and upload token.
-/// Contains no location, Bluetooth address, scooter serial, or account details.
+/// Captures scooter diagnostics in configured builds; never include access tokens.
 class ScooterDiagnostics {
   static final instance = ScooterDiagnostics();
   ScooterDiagnostics({
