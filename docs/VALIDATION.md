@@ -391,3 +391,21 @@ All 40 app tests pass; the separate live collector test also passes with expande
 Static analysis, the server test, the release build, and the IPA archive check pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.5-scroll-fix-unsigned.ipa`.
 SHA-256: `822a3424b797311da3eb3c037dc2e035d60210ca115a86e7f97f44bcbb06a2be`.
+
+## Quick-action labels — 1.2.6+15
+
+The user reports raw quickActions translation keys in the native shortcut menu.
+The old initState code registered shortcut labels before MaterialApp loaded localization delegates.
+LocalizedQuickActions now registers them below MaterialApp, after localization is available.
+It registers titles again when the active locale changes.
+The existing shortcut identifiers and command behavior remain unchanged.
+The unknown-shortcut error also uses the existing translated generic-error key.
+
+Both English and French contain every registered label.
+Static analysis passes. This change does not alter the dashboard or Bluetooth protocol.
+Open the updated app once to replace the shortcut titles cached by iOS.
+Native menu appearance remains a device check.
+
+Release build and IPA integrity checks pass.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.6-quick-actions-unsigned.ipa`.
+SHA-256: `ee558142a7dd21a4f31360784f6cc8c168bcd84e92660f360e9641be6259d356`.

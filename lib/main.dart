@@ -1,4 +1,5 @@
 import 'package:escive/utils/watch_companion.dart';
+import 'package:escive/widgets/localized_quick_actions.dart';
 import 'package:escive/pages/home.dart';
 import 'package:escive/pages/onboarding.dart';
 import 'package:escive/pages/logarte_custom_tab.dart';
@@ -340,19 +341,12 @@ class _MainAppState extends State<MainApp> {
           if(globals.navigatorKey.currentContext != null && context.mounted) {
             showSnackBar(
               globals.navigatorKey.currentContext ?? context,
-              "quickActions.genericError".tr(namedArgs: { "error": err }),
+              "deeplinking.genericError".tr(namedArgs: { "error": err }),
               icon: "error"
             );
           }
       }
     });
-
-    quickActions.setShortcutItems(<ShortcutItem>[
-      ShortcutItem(type: 'controls_lock_on', localizedTitle: 'quickActions.controlsLockOn'.tr()),
-      ShortcutItem(type: 'controls_lock_off', localizedTitle: 'quickActions.controlsLockOff'.tr()),
-      ShortcutItem(type: 'controls_light_toggle', localizedTitle: 'quickActions.controlsLightToggle'.tr()),
-      ShortcutItem(type: 'controls_speed_4', localizedTitle: 'quickActions.controlsSpeed4'.tr()),
-    ]);
 
     debugPrint("TimeMesuring: main.dart: initState() finished his tasks, elapsed: ${mesureStopwatch.elapsedMilliseconds} ms");
   }
@@ -526,6 +520,7 @@ class _MainAppState extends State<MainApp> {
         }
 
         return MaterialApp(
+          builder: (context, child) => LocalizedQuickActions(child: child ?? const SizedBox.shrink()),
           navigatorKey: globals.navigatorKey,
           navigatorObservers: [LogarteNavigatorObserver(logarte)],
           theme: themeData,
