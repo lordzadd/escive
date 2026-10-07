@@ -1,9 +1,38 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:escive/bridges/vicont.dart';
 import 'package:escive/utils/globals.dart' as globals;
 
-class VicontPanel extends StatelessWidget {
-  const VicontPanel({super.key});
+class VicontPanel extends StatefulWidget {
+  const VicontPanel({super.key, this.showPrimaryControls = true});
+  final bool showPrimaryControls;
+
+  @override
+  State<VicontPanel> createState() => _VicontPanelState();
+}
+
+class _VicontPanelState extends State<VicontPanel> {
+  StreamSubscription? _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    // A const child does not rebuild when its parent reads new global state.
+    _subscription = globals.socket.stream.listen((event) {
+      if (event['type'] == 'refreshStates' &&
+          (event['value'] as List).contains('home') &&
+          mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bridge = globals.bridge;
@@ -17,13 +46,12 @@ class VicontPanel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Werhy / Vicont',
-                    style: Theme.of(context).textTheme.titleLarge),
+                if (widget.showPrimaryControls)
+                  Text('Scooter settings',
+                      style: Theme.of(context).textTheme.titleLarge),
                 Text(ready
                     ? 'Live scooter data'
                     : 'Waiting for current scooter data'),
-                const Text(
-                    'Controls use scooter feedback. A sent command does not confirm a change.'),
                 if (ready && !stationary)
                   const Text('Stop the scooter before changing its settings.'),
                 if (a['voltage'] != null)
@@ -33,17 +61,19 @@ class VicontPanel extends StatelessWidget {
                   Text('Scooter fault code: ${a['faultBits']}',
                       style: const TextStyle(color: Colors.red)),
                 Wrap(spacing: 8, children: [
-                  OutlinedButton(
-                      onPressed: stationary
-                          ? () => bridge.setLock(a['locked'] != true)
-                          : null,
-                      child: Text(a['locked'] == true ? 'Unlock' : 'Lock')),
-                  OutlinedButton(
-                      onPressed: ready
-                          ? () => bridge.turnLight(a['light'] != true)
-                          : null,
-                      child:
-                          Text(a['light'] == true ? 'Light off' : 'Light on')),
+                  if (widget.showPrimaryControls)
+                    OutlinedButton(
+                        onPressed: stationary
+                            ? () => bridge.setLock(a['locked'] != true)
+                            : null,
+                        child: Text(a['locked'] == true ? 'Unlock' : 'Lock')),
+                  if (widget.showPrimaryControls)
+                    OutlinedButton(
+                        onPressed: ready
+                            ? () => bridge.turnLight(a['light'] != true)
+                            : null,
+                        child: Text(
+                            a['light'] == true ? 'Light off' : 'Light on')),
                   for (int i = 0; i < bridge.gears.length; i++)
                     ChoiceChip(
                       label: Text('Gear ${bridge.gears[i]}'),

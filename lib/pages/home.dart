@@ -1,3 +1,4 @@
+import 'package:escive/bridges/vicont.dart';
 import 'package:escive/widgets/vicont_panel.dart';
 import 'package:escive/main.dart';
 import 'package:escive/pages/add_device.dart';
@@ -904,6 +905,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSheet({ ScrollController? scrollController }) {
+    final vicont = globals.bridge is VicontBridge ? globals.bridge as VicontBridge : null;
+    final isVicont = globals.currentDevice['protocol'] == 'vicont';
+    final vicontReady = !isVicont || vicont?.ready == true;
+    final vicontStationary = vicontReady && (!isVicont ||
+        (globals.currentDevice['currentActivity']['speedKmh'] as num? ?? 0) <= 1);
+
     final paddingHeight = kToolbarHeight + MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom;
     double additionalPaddingTop = 18;
 
@@ -955,7 +962,9 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildListDelegate(
               [
                 // Slide to Lock/Unlock
-                (globals.currentDevice['protocol'] == 'vicont' || supportedProperties['lock'] != true) ? SizedBox(height: 10) : Padding(
+                supportedProperties['lock'] != true ? SizedBox(height: 10) : IgnorePointer(
+                  ignoring: !vicontStationary,
+                  child: Opacity(opacity: vicontStationary ? 1 : 0.4, child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 48, vertical: 22),
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -968,7 +977,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       await globals.bridge.setLock(!isLocked);
 
-                      _actionSliderController.success(expanded: true);
+                      if (vicont == null) {
+                        _actionSliderController.success(expanded: true);
+                      } else {
+                        _actionSliderController.reset();
+                      }
                       Haptic().click();
                       await Future.delayed(Duration(milliseconds: 800));
                       Haptic().light();
@@ -1000,7 +1013,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         await globals.bridge.setLock(!isLocked);
 
-                        controller.success(expanded: true);
+                        if (vicont == null) {
+                          controller.success(expanded: true);
+                        } else {
+                          controller.reset();
+                        }
                         Haptic().click();
                         await Future.delayed(Duration(milliseconds: 800));
                         Haptic().light();
@@ -1008,9 +1025,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+                  )),
                 ),
-
-                if (globals.currentDevice['protocol'] == 'vicont') const VicontPanel(),
 
                 !globals.isLandscape || supportedProperties['battery'] != true ? SizedBox() : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
@@ -1018,7 +1034,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 // Row 2/1 with 2 cards
-                globals.currentDevice['protocol'] == 'vicont' || (supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true) ? SizedBox() : Padding(
+                (supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true) ? SizedBox() : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1049,7 +1065,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 75,
                             // animation: ledAnimating ? "ledShadow" : "",
                             content: GestureDetector(
-                              onTap: () {
+                              onTap: !vicontReady ? null : () {
                                 Haptic().light();
                                 globals.bridge.turnLight(!ledTurnedOn);
                               },
@@ -1057,7 +1073,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.symmetric(vertical: 4),
                                 child: Platform.isIOS ? CupertinoSwitch(
                                   value: ledTurnedOn,
-                                  onChanged: (value) {
+                                  onChanged: !vicontReady ? null : (value) {
                                     Haptic().light();
                                     globals.bridge.turnLight(value);
                                   },
@@ -1065,7 +1081,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : Switch(
                                   activeTrackColor: Theme.of(context).colorScheme.primary,
                                   value: ledTurnedOn,
-                                  onChanged: (value) {
+                                  onChanged: !vicontReady ? null : (value) {
                                     Haptic().light();
                                     globals.bridge.turnLight(value);
                                   }
@@ -1077,6 +1093,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                ),
+
+                if (isVicont) ExpansionTile(
+                  title: const Text('Scooter settings'),
+                  subtitle: vicontReady ? null : const Text('Waiting for current scooter data'),
+                  children: const [VicontPanel(showPrimaryControls: false)],
                 ),
 
                 // Widgets

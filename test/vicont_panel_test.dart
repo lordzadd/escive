@@ -30,6 +30,6 @@ void main() {
     globals.bridge = null;
     await tester
         .pumpWidget(const MaterialApp(home: Scaffold(body: VicontPanel())));
-    expect(find.text('Werhy / Vicont'), findsNothing);
+    expect(find.text('Scooter settings'), findsNothing);
   });
 }

@@ -67,3 +67,26 @@ The watch app remains available as a separate unsigned build.
 
 Build and research logs are outside the repository in `/Users/ritviksharma/Documents/escive-research`.
 The complete APK and vendor source stay outside the repository as well.
+
+## Control refresh fix — 1.1.1+7
+
+The first physical test reports a Bluetooth connection but disabled controls.
+The screenshots show received battery and distance values alongside a stale control panel.
+A widget regression reproduces the panel remaining disabled after connection.
+The constant stateless panel reads mutable global state without subscribing to updates.
+It now owns a refresh subscription and cancels it when removed.
+
+The dashboard restores the original lock slider and light switch for Vicont.
+Additional settings move into a collapsible section.
+The lock slider does not show a success animation merely because a write completes.
+Fresh telemetry and stationary checks remain enforced.
+The packet parser and Bluetooth command encoding are unchanged.
+
+The regression verifies connection, command dispatch, received light state, moving-state restrictions, and disconnection.
+All 14 tests pass. Static analysis reports no issues.
+Hardware command execution still requires another scooter test.
+
+The unsigned iPhone release build succeeds.
+The versioned IPA passes archive validation and contains version 1.1.1, build 7.
+IPA: `build/ios/ipa/eScive-Werhy-1.1.1-unsigned.ipa`.
+SHA-256: `07ea35f6e9429fb998af100bfab73f5d53ac0cbacd01c251c666e8eb754d5f33`.

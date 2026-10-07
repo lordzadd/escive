@@ -5,8 +5,9 @@ Hardware compatibility is not yet verified.
 
 ## Ready for signing
 
-The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-unsigned.ipa`.
-It needs signing with your Apple development account before installation.
+The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.1.1-unsigned.ipa`.
+Sign the IPA with your signing service before installation.
+Version 1.1.1 fixes the disabled control panel and restores the original lock and light controls.
 The IPA contains the phone app. The legacy watch app is separate.
 Hardware operation remains unverified.
 
