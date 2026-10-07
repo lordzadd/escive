@@ -1,3 +1,12 @@
+# Werhy / Vicont extension
+
+This local fork adds Vicont BLE controls and an experimental Apple Watch Series 2 companion.
+It is not yet verified on a physical scooter or watch.
+Start with [the setup guide](docs/GETTING_STARTED.md) and [validation results](docs/VALIDATION.md).
+See [protocol evidence](docs/VICONT_PROTOCOL.md) and [watch support](docs/APPLE_WATCH.md).
+
+---
+
 ###### Version française [ici](https://github.com/johan-perso/escive/blob/main/README.fr.md).
 
 # eScive

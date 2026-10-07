@@ -1,3 +1,4 @@
+import 'package:escive/widgets/vicont_panel.dart';
 import 'package:escive/main.dart';
 import 'package:escive/pages/add_device.dart';
 import 'package:escive/pages/maps.dart';
@@ -704,7 +705,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     _everyQuarterMinuteTimer = Timer.periodic(Duration(seconds: 15), (timer) {
       if(globals.settings['useAdvancedStats'] == true && globals.currentDevice.containsKey('currentActivity') && globals.currentDevice['currentActivity']['state'] == 'connected'){
-        int speedkmh = globals.currentDevice['currentActivity']['speedKmh'] ?? 0;
+        num speedkmh = globals.currentDevice['currentActivity']['speedKmh'] ?? 0;
         if(speedkmh > 3){ // 4 km/h or +
           (globals.currentDevice['stats']['datas']['lastSpeedsKmh'] ?? []).add(speedkmh);
           if(globals.currentDevice['stats']['datas']['lastSpeedsKmh'].length > 720) globals.currentDevice['stats']['datas']['lastSpeedsKmh'].removeAt(0);
@@ -954,7 +955,7 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildListDelegate(
               [
                 // Slide to Lock/Unlock
-                supportedProperties['lock'] != true ? SizedBox(height: 10) : Padding(
+                (globals.currentDevice['protocol'] == 'vicont' || supportedProperties['lock'] != true) ? SizedBox(height: 10) : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 48, vertical: 22),
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -1009,13 +1010,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
+                if (globals.currentDevice['protocol'] == 'vicont') const VicontPanel(),
+
                 !globals.isLandscape || supportedProperties['battery'] != true ? SizedBox() : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: BatteryIndicator()
                 ),
 
                 // Row 2/1 with 2 cards
-                supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true ? SizedBox() : Padding(
+                globals.currentDevice['protocol'] == 'vicont' || (supportedProperties['speedModeLength'] < 1 && supportedProperties['light'] != true) ? SizedBox() : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

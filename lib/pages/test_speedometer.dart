@@ -22,7 +22,7 @@ class _TestSpeedometerState extends State<TestSpeedometer> with SingleTickerProv
   void initState() {
     _streamSubscription = globals.socket.stream.listen((event) {
       if(event['type'] == 'databridge' && event['subtype'] == 'speed'){
-        double newSpeed = (event['data']['speedKmh'] as int).toDouble();
+        double newSpeed = (event['data']['speedKmh'] as num).toDouble();
         currentSpeed[event['data']['source']] = newSpeed;
         history.insert(0, '$newSpeed km/h (${event['data']['precision']}) (${event['data']['source']})');
         if(history.length > 50) history.removeAt(history.length - 1);

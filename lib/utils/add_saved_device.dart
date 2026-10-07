@@ -20,14 +20,10 @@ Future<void> addSavedDevice(BuildContext context, { String protocol = 'debug', S
   await globals.refreshDevices();
 
   // Avoid multiple devices with the same name
-  while(name != null && globals.devices.any((element) => element['name'] == name)){
-    dynamic lastDigitInName = int.parse(name[name.length - 1]);
-    if(lastDigitInName == int){
-      lastDigitInName++;
-      name = name.substring(0, name.length - 1) + lastDigitInName.toString();
-    } else {
-      name = '$name 1';
-    }
+  final baseName = name;
+  int suffix = 1;
+  while (name != null && globals.devices.any((d) => d['name'] == name)) {
+    name = '$baseName ${suffix++}';
   }
 
   Map newDevice = globals.generateDeviceMap();
@@ -38,6 +34,9 @@ Future<void> addSavedDevice(BuildContext context, { String protocol = 'debug', S
   newDevice['serviceUuid'] = serviceUuid ?? '';
   newDevice['writeCharacteristicUuid'] = writeCharacteristicUuid ?? '';
   newDevice['readCharacteristicUuid'] = readCharacteristicUuid ?? '';
+  if (protocol == 'vicont') {
+    newDevice['supportedProperties']['speedModeLength'] = 0;
+  }
   if(protocol == 'debug'){
     newDevice['stats']['tripDistanceKm'] = Random().nextInt(20);
     newDevice['stats']['totalDistanceKm'] = Random().nextInt(170) + 80;

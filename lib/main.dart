@@ -1,3 +1,4 @@
+import 'package:escive/utils/watch_companion.dart';
 import 'package:escive/pages/home.dart';
 import 'package:escive/pages/onboarding.dart';
 import 'package:escive/pages/logarte_custom_tab.dart';
@@ -82,6 +83,8 @@ void main() async {
   await getAppVersion(); // establish cache at the start
 
   debugPrint("TimeMesuring: main.dart: async operations has finished, elapsed: ${mesureStopwatch.elapsedMilliseconds} ms");
+
+  WatchCompanion.start();
 
   runApp(
     Phoenix(

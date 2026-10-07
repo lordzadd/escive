@@ -66,15 +66,13 @@ void showSelectModal({
                         onChanged(index);
                         Navigator.pop(context);
                       },
-                      leading: !isRadio ? null : RadioGroup(
+                      leading: !isRadio ? null : Radio(
+                        value: index,
                         groupValue: currentValue,
                         onChanged: (value) {
                           onChanged(index);
                           Navigator.pop(context);
                         },
-                        child: Radio(
-                          value: index,
-                        ),
                       ),
                     );
                   },

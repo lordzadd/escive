@@ -1,7 +1,8 @@
-library escive.globals;
+library;
 
 import 'package:escive/main.dart';
 import 'package:escive/bridges/debug.dart';
+import 'package:escive/bridges/vicont.dart';
 import 'package:escive/bridges/iscooter.dart';
 import 'package:escive/pages/music_player.dart';
 import 'package:escive/utils/geolocator.dart';
@@ -45,6 +46,7 @@ late List devices;
 Map currentDevice = {};
 
 final List<Guid> webOptionalServices = [ // web browsers deny requests without this property
+  Guid('fff0'), Guid('fee0'),
   Guid('6d581e70-15c6-11ec-82a8-0002a5d5c51b') // iScooter service
 ];
 
@@ -62,6 +64,8 @@ void initBridge(BuildContext context) async {
 
     if(currentDevice['protocol'] == 'debug'){
       bridge = DebugBridge();
+    } else if(currentDevice['protocol'] == 'vicont'){
+      bridge = VicontBridge();
     } else if(currentDevice['protocol'] == 'iscooter'){
       bridge = IscooterBridge();
     } else {

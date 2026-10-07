@@ -19,6 +19,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:easy_localization/easy_localization.dart' as localization;
 
 List protocols = [
+  {'id': 'vicont', 'title': 'Vicont / Werhy', 'subtitle': 'Local Bluetooth controls for FFF0/FFF1 or FEE0/FEE2 devices'},
   {
     "id": "iscooter",
     "title": "protocols.iscooter.title".tr(),
@@ -40,6 +41,7 @@ class AddDeviceScreen extends StatefulWidget {
 
 class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProviderStateMixin {
   StreamSubscription? _streamSubscription;
+  StreamSubscription? _scanSubscription;
   bool disableActions = false;
   String scanState = 'none';
   String scanContentText = '';
@@ -76,7 +78,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
     int devicesCount = 0;
 
     logarte.log("Creating scan results listener...");
-    FlutterBluePlus.scanResults.listen((results) async {
+    await _scanSubscription?.cancel();
+    _scanSubscription = FlutterBluePlus.scanResults.listen((results) async {
       for (ScanResult r in results) {
         if(scannedDevices.any((element) => element['address'] == r.device.remoteId.toString())) continue;
         if(r.device.platformName == '') continue;
@@ -104,9 +107,9 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
     });
 
     logarte.log("Starting scan...");
-    late Timer timeout;
+    Timer? timeout;
     try {
-      FlutterBluePlus.startScan(
+      await FlutterBluePlus.startScan(
         timeout: const Duration(seconds: 30),
         webOptionalServices: globals.webOptionalServices,
       );
@@ -123,7 +126,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
     } catch (e) {
       logarte.log("Error occurred while starting scan: $e");
       if(mounted) showSnackBar(context, "addDevice.errors.whileSearching".tr(namedArgs: {'error': e.toString()}), icon: "error");
-      if(timeout.isActive) timeout.cancel();
+      timeout?.cancel();
       stopScan();
     }
   }
@@ -169,6 +172,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
   Widget _buildCompatibilityWarn(){
     List compatibilityList = [];
     compatibilityList.addAll(IscooterBridge().supportedDevicesList);
+    compatibilityList.add(' · Vicont / Werhy (hardware test pending)');
 
     return bannerMessage(
       context,
@@ -273,7 +277,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
                       logarte.log("  - Characteristic: ${characteristic.uuid}");
                       logarte.log("    Properties: read=${characteristic.properties.read}, write=${characteristic.properties.write}, notify=${characteristic.properties.notify}");
 
-                      if(characteristic.properties.write) writableCharacteristics.add(characteristic);
+                      if(characteristic.properties.write || characteristic.properties.writeWithoutResponse) writableCharacteristics.add(characteristic);
                       if(characteristic.properties.read) readableCharacteristics.add(characteristic);
                       if(characteristic.properties.notify) notifiableCharacteristics.add(characteristic);
                     }
@@ -352,6 +356,23 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
                     logarte.log("No potential service found with read and write characteristics");
                   }
 
+                  // Prefer the exact Vicont characteristic over the generic heuristic.
+                  for (final profile in {'fff0': 'fff1', 'fee0': 'fee2'}.entries) {
+                    for (final service in services.where((s) => s.uuid == Guid(profile.key))) {
+                      for (final c in service.characteristics) {
+                        if (c.uuid == Guid(profile.value) &&
+                            (c.properties.write || c.properties.writeWithoutResponse) &&
+                            (c.properties.notify || c.properties.indicate)) {
+                          targetService = service;
+                          writeCharacteristic = readCharacteristic = c;
+                          detectedServiceUuid = service.uuid.toString();
+                          detectedWriteCharacteristicUuid = detectedReadCharacteristicUuid = c.uuid.toString();
+                        }
+                      }
+                    }
+                    if (detectedServiceUuid == profile.key) break;
+                  }
+
                   // Final check than we have found a service with characteristics of reading and writing
                   if (targetService != null) {
                     logarte.log("Main service found: $detectedServiceUuid");
@@ -363,7 +384,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
                       // We will test the communication with the device
                       bool valueReadSuccessful = false;
                       try {
-                        if (readCharacteristic.properties.notify) { // enable notifications if possible
+                        if (readCharacteristic.properties.notify || readCharacteristic.properties.indicate) { // enable notifications if possible
                           await readCharacteristic.setNotifyValue(true);
                           logarte.log("Notifications enabled successfully");
                           valueReadSuccessful = true;
@@ -383,6 +404,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
                         logarte.log("Disconnected device after checking UUIDs with success");
 
                         if(!mounted) return;
+                        setState(() { disableActions = false; });
                         showSelectModal(
                           context: context,
                           title: 'addDevice.selectProtocol'.tr(),
@@ -619,6 +641,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
   @override
   void dispose() {
     _streamSubscription?.cancel();
+    _scanSubscription?.cancel();
     _iconAnimationController.dispose();
 
     for (var timeout in scanTimeouts) {

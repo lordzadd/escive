@@ -52,7 +52,7 @@ class _SpeedometerState extends State<Speedometer> {
           return;
         }
 
-        currentSpeed = (event['data']['speedKmh'] as int).toDouble();
+        currentSpeed = (event['data']['speedKmh'] as num).toDouble();
         if (mounted) setState(() {});
       } else if (event['type'] == 'databridge' && event['subtype'] == 'warningLight') {
         warningLights[event['data']['name']] = event['data']['value'];

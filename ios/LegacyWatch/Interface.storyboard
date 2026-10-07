@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16096" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" initialViewController="host">
+    <device id="watch38"/>
+    <dependencies><plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="16087"/></dependencies>
+    <scenes><scene sceneID="scene"><objects>
+        <hostingController id="host" customClass="HostingController" customModule="LegacyWatchExtension" customModuleProvider="target"/>
+    </objects></scene></scenes>
+</document>
