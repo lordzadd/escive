@@ -7,8 +7,16 @@ import 'package:escive/utils/globals.dart' as globals;
 class WatchCompanion {
   static const _channel = MethodChannel('escive/watch');
   static Timer? _timer;
+  static void stop() {
+    _timer?.cancel();
+    _timer = null;
+    _channel.setMethodCallHandler(null);
+  }
+
   static void start() {
-    if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS || _timer != null) {
+    if (kIsWeb ||
+        defaultTargetPlatform != TargetPlatform.iOS ||
+        _timer != null) {
       return;
     }
     _channel.setMethodCallHandler((call) async {

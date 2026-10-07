@@ -404,7 +404,10 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> with SingleTickerProv
                         logarte.log("Disconnected device after checking UUIDs with success");
 
                         if(!mounted) return;
-                        setState(() { disableActions = false; });
+                        setState(() {
+                          disableActions = false;
+                          scanContentText = '';
+                        });
                         showSelectModal(
                           context: context,
                           title: 'addDevice.selectProtocol'.tr(),

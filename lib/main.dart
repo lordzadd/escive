@@ -231,6 +231,8 @@ class _MainAppState extends State<MainApp> {
     batteryPlus.batteryLevel.then((int level) {
       logarte.log('Initial battery level: $level%');
       globals.userDeviceBatteryLevel = level;
+    }).catchError((Object error) {
+      logarte.log('Phone battery level unavailable: $error');
     });
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -285,7 +287,12 @@ class _MainAppState extends State<MainApp> {
 
     batteryPlus.onBatteryStateChanged.listen((BatteryState state) async {
       logarte.log('Battery state: $state');
-      globals.userDeviceBatteryLevel = await batteryPlus.batteryLevel;
+      try {
+        globals.userDeviceBatteryLevel = await batteryPlus.batteryLevel;
+      } catch (error) {
+        logarte.log('Phone battery level unavailable: $error');
+        return;
+      }
 
       if(globals.userDeviceBatteryLevel < 30) { // less than 30%
         globals.userDeviceBatteryLow = true;

@@ -40,6 +40,9 @@ class VicontBridge {
         'subtype': type,
         'data': value,
       });
+  void setWarningLight(String name, bool enabled) =>
+      _event('warningLight', {'name': name, 'value': enabled});
+
   void _state(String value) {
     _saved['currentActivity']['state'] = value;
     _event('state', value);

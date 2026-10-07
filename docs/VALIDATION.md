@@ -90,3 +90,96 @@ The unsigned iPhone release build succeeds.
 The versioned IPA passes archive validation and contains version 1.1.1, build 7.
 IPA: `build/ios/ipa/eScive-Werhy-1.1.1-unsigned.ipa`.
 SHA-256: `07ea35f6e9429fb998af100bfab73f5d53ac0cbacd01c251c666e8eb754d5f33`.
+
+## Expanded QA — 2026-10-06
+
+Release status: HOLD. No new IPA was created during this pass.
+The existing 1.1.1+7 IPA remains unchanged, with the SHA-256 listed above.
+It does not include the fixes from this pass.
+
+### Automated coverage
+
+All 24 Flutter tests pass. Static analysis reports no issues.
+The new tests replace the native Bluetooth boundary with synthetic responses.
+They exercise the actual Dart Bluetooth library, Vicont bridge, parser, and control panel.
+The responses are generated fixtures, not recordings from the physical scooter.
+
+- FFF0 and FEE0 discovery, notification subscription, and initialization.
+- Writes with response and writes without response.
+- Lock, unlock, light, gear, cruise, zero-start, and find command bytes.
+- Received battery, distance, available gears, and control state.
+- Moving-state restrictions, invalid gears, busy writes, and failed writes.
+- Disconnect, reconnect, and automatic reconnect readiness.
+- Unsupported services, stale telemetry, and incomplete speed-only telemetry.
+- Warning indicators update without sending Bluetooth commands.
+- Watch channel dispatch for lock, unlock, and both light states.
+- Watch rejection of unknown actions, wrong device IDs, and unavailable connections.
+
+### Simulator checks
+
+A dedicated iPhone 17 Pro simulator runs iOS 26.5.
+The normal debug app builds, installs, and displays its Home Screen icon.
+The native simulator cannot establish a physical scooter Bluetooth connection.
+The debug-only `tool/qa_simulator.dart` runs the production interface with simulated Bluetooth responses.
+The release entry point does not import this simulator.
+
+Verified through the interface:
+
+- Welcome screen, device scan, protocol selection, and dashboard navigation.
+- A cancelled protocol dialog can be opened again.
+- Saved scooter selection survives a hot restart and reconnects.
+- Received battery, speed, voltage, temperatures, and distances render.
+- Light, gear, cruise, and zero-start controls send commands and reflect subsequent simulated telemetry.
+- Find sends the expected command. No physical beep is claimed.
+- Double-tapping the lock control sends lock/unlock and updates its label after simulated telemetry.
+- The sheet and scooter settings section expand.
+- Application settings open and return to the dashboard.
+- The inactive-warning setting changes, and the speedometer limit selector opens and accepts a selection.
+
+### Defects fixed during this pass
+
+The full dashboard called a missing `VicontBridge.setWarningLight` method.
+This caused repeated runtime errors when telemetry reached warning indicators.
+The bridge now emits the expected warning event. A regression test covers the event and rendered indicator.
+
+Unavailable phone battery readings caused unhandled platform errors in the simulator.
+Both initial and subsequent reads now log the failure and keep the app running.
+
+Cancelling protocol selection left the scan label showing connection progress.
+The selector now clears this label before opening.
+The label fix has source review coverage; its exact text still needs a fresh simulator check.
+
+### Remaining release checks
+
+- Horizontal dragging of the lock slider did not trigger a command through the UI automation tool.
+  Double-tapping works. The cause remains unresolved: gesture injection or the slider itself.
+- No physical scooter command execution, acknowledgement, motion, or reconnection test was performed here.
+- No signed installation through Signulous was performed here.
+- No physical Watch Series 2 installation, native WatchConnectivity session, or suspended-phone test was performed.
+- The IPA has no embedded watch app or widget extension.
+- Maps, navigation, music, weather, ride-history accuracy, and all orientation/language combinations are outside this pass.
+
+These limits prevent a full end-to-end release pass. Passing synthetic tests does not remove them.
+
+### Reproduction and evidence
+
+Run `flutter test` and `flutter analyze` from the repository.
+For interface testing, run `flutter run -d <simulator-id> -t tool/qa_simulator.dart`.
+Never package this QA entry point for distribution.
+
+Local evidence is under `/Users/ritviksharma/Documents/escive-research`:
+
+- `qa-final-tests.txt`: final 24-test pass.
+- `qa-final-analyze.txt`: clean static analysis.
+- `qa-simulator-build.txt`: simulator build result.
+- `qa-simulator-fixed.txt`: simulator session; earlier segments include errors before the fixes.
+- `qa-home-icon.png`: installed application icon.
+- `qa-controls.png`: expanded dashboard with simulated telemetry.
+
+### Home Screen placement
+
+The app includes an icon and opens from that icon in the simulator.
+iOS can place new apps in the App Library only.
+The user controls this through Settings > Home Screen & App Library.
+Apple documents both installation choices and moving an existing app to the Home Screen:
+https://support.apple.com/en-us/108324
