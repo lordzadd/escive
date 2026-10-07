@@ -13,3 +13,10 @@ alwaysApply: true
 - Preserve the agreed UI during protocol and bug fixes unless the user requests a layout change.
 - Trace the complete source path before changing reverse-engineered behavior.
 - Separate source evidence, automated tests, and physical verification.
+
+## Scooter diagnostic follow-up
+
+- For tests with eScive 1.2.4 or a later configured diagnostic build, read the Railway events before asking for screenshots.
+- Run `python3 diagnostics-server/read_events.py` from the repository root. Setup and limits are in `diagnostics-server/README.md`.
+- Keep `.diagnostics` credentials private. Never print them or commit them.
+- Separate synthetic test sessions from device sessions. Server receipt does not prove physical P or wheel immobilization.

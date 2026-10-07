@@ -347,3 +347,26 @@ the project's .cursor/rules/follow-through.mdc, and an authorized persistent-mem
 Release build and IPA integrity checks pass.
 Artifact: `build/ios/ipa/eScive-Werhy-1.2.3-apk-traced-lock-unsigned.ipa`.
 SHA-256: `0f158dd3da915f57fd370721d8a573b8cd7f9444098571f843dafb64d00025c3`.
+
+## Automatic diagnostics — 1.2.4+13 (2026-10-07)
+
+Adds a Railway collector and an HTTPS uploader for the user's physical scooter tests.
+The diagnostic build uploads connection states, command bytes, selected decoded telemetry,
+setting replies, and parking request/results. It excludes GPS, device addresses, and scooter serials.
+The dashboard, settings layout, and existing Bluetooth commands remain unchanged.
+The 039ZQ-31 variant still requires physical acceptance; this release adds observation, not a new model mapping.
+
+Static analysis passes. All 39 app tests pass; the live test is skipped in the ordinary suite.
+The separate live test passes with the real Dart uploader against Railway.
+It verifies accepted upload, authenticated retrieval, anonymous-read rejection, and upload-token read rejection.
+The Python collector test covers auth separation, invalid batches, storage, and expiry.
+Only synthetic events were used for server acceptance. No physical scooter result is claimed.
+
+Railway project: 05da55b6-4e32-4184-b8c0-6bbad3edd29c.
+Service: escive-diagnostics; persistent volume mounted at /data.
+See diagnostics-server/README.md for retrieval and retention limits.
+Private credentials remain outside Git in the ignored .diagnostics directory.
+
+Release build and IPA archive checks pass. The read credential is absent from the IPA.
+Artifact: `build/ios/ipa/eScive-Werhy-1.2.4-railway-diagnostics-unsigned.ipa`.
+SHA-256: `1e3ec57297c2c3e152825f608749b060038f3e618b7edc652789f4463d6f8a45`.

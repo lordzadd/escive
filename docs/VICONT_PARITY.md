@@ -1,4 +1,37 @@
-# Vicont feature parity audit — 2026-10-06
+# Vicont feature parity audit — 2026-10-07
+
+## Current model assessment: 039ZQ-31
+
+The user identifies the scooter as model 039ZQ-31.
+The manufacturer's 039ZQ control-kit manual covers the family, but does not explain the -31 suffix.
+Do not infer the vendor's modelId or versionType from this number.
+The extracted APK contains no matching 039ZQ model string.
+Its getFunctionList request uses a server-provided modelId.
+
+Source: [Vicont 039ZQ manual, pages 4 and 8](https://device.report/m/268d2c5457d7c17565c8cce882acefb5b4b389a95d1747f50558593215e14b72_optim.pdf).
+
+| Relevant function | Family evidence | Current 1.2.3 status |
+| --- | --- | --- |
+| Parking lock | Manual describes P indication and movement alarms; user confirms Vicont immobilizes this scooter | Corrected APK main-screen command is implemented; physical acceptance remains pending |
+| Lights | Manual describes front/rear light control | Headlight works according to the user; rear-light behavior remains unverified |
+| Three gears | Manual lists three gears | Selection uses the device's advertised gears; physical acceptance remains pending |
+| Speed adjustment | Manual explicitly allows third-gear speed adjustment through the app | Speed tuning is implemented when the scooter answers its query; effect remains unverified |
+| Battery display | Manual describes the dashboard battery indicator | App telemetry is implemented; accuracy comparison remains pending |
+| Firmware updates | Manual advertises OTA support | No update implementation; no available firmware or exact -31 support established |
+
+Cruise, zero-start, find, units, ride modes, diagnostics, and torque/brake tuning exist in our app.
+The shared APK supports these paths, but the manual does not establish every option for the -31 variant.
+No inspected model-specific evidence establishes saddle, helmet, or basket accessories on this scooter.
+Do not count these generic APK features as required parity gaps.
+Maps, cellular control, and account services also lack evidence as required functions for this scooter.
+
+Conclusion: core controls are implemented, but working parity is not yet established.
+The main unresolved acceptance item is physical P locking and unlocking with version 1.2.3.
+The model number does not resolve the APK's versionType-dependent binding branch.
+No UI or protocol change follows from the model number alone.
+This update uses document and source inspection; it adds no automated or physical test result.
+
+The sections below retain the earlier generic audit and release history.
 
 ## Requirement and device evidence
 

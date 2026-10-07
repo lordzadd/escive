@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:escive/utils/scooter_diagnostics.dart';
 import 'package:escive/main.dart' show logarte;
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -134,6 +135,7 @@ class VicontBridge {
       _event('warningLight', {'name': name, 'value': enabled});
 
   void _state(String value) {
+    ScooterDiagnostics.instance.record('state', {'value': value});
     _saved['currentActivity']['state'] = value;
     _event('state', value);
     _event('warningLight',
@@ -230,7 +232,16 @@ class VicontBridge {
       final c = _characteristic!;
       logarte.log(
           'Vicont TX: ${bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
-      await c.write(bytes, withoutResponse: !c.properties.write);
+      ScooterDiagnostics.instance.record('tx', {
+        'bytes': bytes,
+        'withoutResponse': !c.properties.write,
+      });
+      try {
+        await c.write(bytes, withoutResponse: !c.properties.write);
+      } catch (_) {
+        ScooterDiagnostics.instance.record('write_error', {'bytes': bytes});
+        rethrow;
+      }
       await Future<void>.delayed(const Duration(milliseconds: 300));
     });
     _queue = task.catchError((Object _) {});
@@ -242,6 +253,13 @@ class VicontBridge {
         'Vicont RX: ${bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}');
     for (final frame in _decoder.add(bytes)) {
       final code = frame[1];
+      if ([0x4a, 0x3c, 0x3d, 0x3e, 0x3f].contains(code)) {
+        ScooterDiagnostics.instance.record('telemetry', {
+          'code': code,
+          'header': frame[0],
+          'settingReply': frame.skip(3).take(frame[2]).take(2).toList(),
+        });
+      }
       if (_queries.containsKey(code) && frame[2] >= 1) {
         final value = frame[3];
         final valid = code == 0x4a
@@ -267,6 +285,35 @@ class VicontBridge {
         // Keep parking brake and electronic-lock feedback distinct.
         values['electronicLocked'] = values['locked'];
         values['locked'] = values['brakeLocked'];
+      }
+      if ([0x10, 0x11, 0x12].contains(code)) {
+        const allowed = {
+          'speedKmh',
+          'battery',
+          'voltage',
+          'locked',
+          'electronicLocked',
+          'brakeLocked',
+          'bluetoothBound',
+          'gear',
+          'braking',
+          'faultBits',
+          'gears',
+          'controllerHardware',
+          'controllerSoftware',
+          'instrumentHardware',
+          'instrumentSoftware',
+          'cruise',
+          'zeroStart',
+          'light'
+        };
+        ScooterDiagnostics.instance.record('telemetry', {
+          'code': code,
+          'header': frame[0],
+          for (final entry in values.entries)
+            if (allowed.contains(entry.key) && entry.value != null)
+              entry.key: entry.value as Object,
+        });
       }
       _header = frame[0];
       if (frame[1] == 0x10) _lastSpeed = DateTime.now();
@@ -351,6 +398,7 @@ class VicontBridge {
   }
 
   Future<bool> setLock(bool state) async {
+    ScooterDiagnostics.instance.record('parking', {'requested': state});
     if (_parkingOperation || _busy) return false;
     _parkingOperation = true;
     final generation = _generation;
@@ -374,10 +422,12 @@ class VicontBridge {
         throw StateError(
             'Parking state not confirmed. Check P on the scooter.');
       }
+      ScooterDiagnostics.instance.record('parking', {'confirmed': state});
       logarte.log(
           'Vicont parking sequence: reported state confirmed ($state). Physical P remains a device check.');
       return true;
     } catch (error) {
+      ScooterDiagnostics.instance.record('parking', {'failed': state});
       logarte.log('Vicont parking sequence failed: $error');
       final context = _context;
       if (context != null && context.mounted) {
