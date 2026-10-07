@@ -5,11 +5,19 @@ Hardware compatibility is not yet verified.
 
 ## Ready for signing
 
-The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.1.1-unsigned.ipa`.
+The unsigned iPhone release is `build/ios/ipa/eScive-Werhy-1.1.2-unsigned.ipa`.
 Sign the IPA with your signing service before installation.
-Version 1.1.1 fixes the disabled control panel and restores the original lock and light controls.
+Version 1.1.2 includes the control refresh fix, original lock and light controls, and dashboard runtime fixes.
 The IPA contains the phone app. The legacy watch app is separate.
-Hardware operation remains unverified.
+Hardware operation remains unverified. The user will test this version manually.
+
+For the manual test, keep the scooter stationary.
+Check that telemetry updates after connecting.
+Try the light first and confirm the physical light changes.
+Then test lock/unlock, including the slider gesture.
+Check gear, cruise, and zero-start settings against the scooter response.
+Disconnect and reconnect to confirm controls recover.
+A sent command alone does not prove that the scooter applied it.
 
 ## Phone build
 

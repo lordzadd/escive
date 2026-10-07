@@ -183,3 +183,23 @@ iOS can place new apps in the App Library only.
 The user controls this through Settings > Home Screen & App Library.
 Apple documents both installation choices and moving an existing app to the Home Screen:
 https://support.apple.com/en-us/108324
+
+## Manual-test IPA — 1.1.2+8
+
+The user requested an IPA and accepted manual device testing for the remaining checks.
+This supersedes the packaging hold above, but does not change the hardware verification status.
+
+The production entry point `lib/main.dart` builds successfully for iPhone in release mode.
+The debug scooter simulator is not the build target.
+The archive passes ZIP integrity validation.
+Its Info.plist confirms version 1.1.2, build 8, and the iPhoneOS platform.
+The IPA contains the phone app, without the separate legacy watch app.
+
+Artifact: `build/ios/ipa/eScive-Werhy-1.1.2-unsigned.ipa` (26.8 MiB).
+SHA-256: `fd821697cc8872c3faf360e6c0abc4d10b378e681acedcf3ed088b7e664f1071`.
+Build log: `/Users/ritviksharma/Documents/escive-research/build-1.1.2-release.txt`.
+
+Signulous must sign this unsigned IPA before installation.
+The 24-test pass and clean analysis from the preceding QA pass apply to the same application logic.
+Only the application version and documentation changed for this packaging step.
+Physical controls, the slider gesture, and Watch operation remain manual test items.
