@@ -17,11 +17,13 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3CB8CE8BADA68B8671D70216 /* ScooterLockWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F5EE15DE1E01EB27CCB6A4 /* ScooterLockWidget.swift */; };
 		44DC511691A59F925DE05D6C /* LockScooterIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */; };
+		4EDCFA4B06BE3D7499971307 /* ScooterProximity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0D7540DA725BC1237E0444 /* ScooterProximity.swift */; };
 		4F012510620266FE6D33B905 /* ScooterLockWidget.appex in Embed Widget Extension */ = {isa = PBXBuildFile; fileRef = D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		555BD73BD82E2061BA88E21F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7571F2580560F583A873ABA7 /* Foundation.framework */; };
 		686B04A3C09A6BD39A264BA3 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EAF34FE7DE4494E95553FBA /* Interface.storyboard */; };
 		6BB315264EA48A4C452155CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5089637BBAE3B5A308ECB71 /* Foundation.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		89FCED0DEA83829763771DAD /* ProximityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE57A341F4875F2AD2183C57 /* ProximityPolicy.swift */; };
 		8CE35D2FD2A33E60A4D6ECD3 /* LockScooterIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -99,6 +101,7 @@
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AEAA9B2ACD55286BD931883 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		5C0D7540DA725BC1237E0444 /* ScooterProximity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScooterProximity.swift; sourceTree = "<group>"; };
 		60FFFFC7C45171C2F5D5E915 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EAF34FE7DE4494E95553FBA /* Interface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
 		6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LockScooterIntent.swift; sourceTree = "<group>"; };
@@ -125,6 +128,7 @@
 		D8A127A8C695B9B42C7FE257 /* ScooterLockWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScooterLockWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E45FA603A063C0B0C16F8E6D /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		EA756BAAF3E0EF443ED5F564 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		EE57A341F4875F2AD2183C57 /* ProximityPolicy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProximityPolicy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +212,8 @@
 				B9DA52350CB7F9004B8806AA /* VicontLockProtocol.swift */,
 				ACCA796F1ABC91B28E5B7AE4 /* ScooterLocker.swift */,
 				6F4DFF8B96E40604A0822C02 /* LockScooterIntent.swift */,
+				EE57A341F4875F2AD2183C57 /* ProximityPolicy.swift */,
+				5C0D7540DA725BC1237E0444 /* ScooterProximity.swift */,
 			);
 			name = ScooterControl;
 			path = ScooterControl;
@@ -625,6 +631,8 @@
 				0EDF8BF5E7CB12D5E5CF9C78 /* VicontLockProtocol.swift in Sources */,
 				1C975CEE00A403E492A71092 /* ScooterLocker.swift in Sources */,
 				8CE35D2FD2A33E60A4D6ECD3 /* LockScooterIntent.swift in Sources */,
+				89FCED0DEA83829763771DAD /* ProximityPolicy.swift in Sources */,
+				4EDCFA4B06BE3D7499971307 /* ScooterProximity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

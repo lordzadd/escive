@@ -11,10 +11,27 @@ import WatchConnectivity
   override func application(_ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+    ScooterProximity.shared.restore()
     if let controller = window?.rootViewController as? FlutterViewController {
       let channel = FlutterMethodChannel(name: "escive/watch", binaryMessenger: controller.binaryMessenger)
       watchChannel = channel
       channel.setMethodCallHandler { [weak self] call, result in
+        if call.method == "proximityStatus" {
+          result(ScooterProximity.shared.snapshot()); return
+        }
+        if call.method == "proximityConfigure", let data = call.arguments as? [String: Any] {
+          do {
+            try ScooterProximity.shared.configure(enabled: data["enabled"] as? Bool ?? false,
+                                                   id: data["address"] as? String)
+            result(ScooterProximity.shared.snapshot())
+          } catch {
+            result(FlutterError(code: "proximity", message: error.localizedDescription, details: nil))
+          }
+          return
+        }
+        if call.method == "manualParking", let locked = call.arguments as? Bool {
+          ScooterProximity.shared.manual(locked: locked); result(nil); return
+        }
         if call.method == "installation" {
           let bundle = Bundle.main
           let extensions = (try? FileManager.default.contentsOfDirectory(at: bundle.builtInPlugInsURL ?? bundle.bundleURL.appendingPathComponent("PlugIns"), includingPropertiesForKeys: nil)) ?? []
@@ -36,6 +53,9 @@ import WatchConnectivity
         }
         // Keep widget configuration in the host app. It needs no App Group entitlement.
         let defaults = UserDefaults.standard
+        if let selected = data["deviceId"] as? String, !selected.isEmpty {
+          ScooterProximity.shared.selectedDevice(data["bluetoothAddress"] as? String ?? "")
+        }
         if let address = data["bluetoothAddress"] as? String, UUID(uuidString: address) != nil {
           defaults.set(address, forKey: "scooterWidgetPeripheral")
         } else {

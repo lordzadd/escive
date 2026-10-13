@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:escive/utils/scooter_diagnostics.dart';
 import 'package:escive/main.dart' show logarte;
 import 'package:flutter/material.dart';
+import 'package:escive/utils/proximity_key.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:escive/protocols/vicont.dart';
 import 'package:escive/utils/globals.dart' as globals;
@@ -385,6 +386,7 @@ class VicontBridge {
     _parkingOperation = true;
     final generation = _generation;
     try {
+      await ProximityKey.manual(state);
       final revision = _statusRevision;
       if (!await command(0x33, [state ? 2 : 1],
           stationary: true, parkingSequence: true)) {

@@ -31,6 +31,7 @@ final class ScooterLocker: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
             throw Failure(message: "Open eScive and connect your scooter once to set up the widget.")
         }
         toggleResolved = false
+        ScooterProximity.shared.manual(locked: true)
         target = uuid; decoder = VicontLockProtocol(); sentAt = nil
         writeAcknowledged = false; operation = UUID(); events = []
         record("parking", ["requested": "toggle", "source": "lockWidget"])
@@ -124,6 +125,7 @@ final class ScooterLocker: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
             // Wait through any in-progress transition before deciding the opposite state.
             guard let target = decoder.toggleTarget() else { return }
             requestedLock = target
+            ScooterProximity.shared.manual(locked: target)
             toggleResolved = true
             record("parking", ["requested": requestedLock, "source": "lockWidget"])
         }

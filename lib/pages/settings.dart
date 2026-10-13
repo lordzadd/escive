@@ -3,6 +3,7 @@ import 'package:escive/utils/refresh_advanced_stats.dart';
 import 'package:escive/utils/weather.dart';
 import 'package:escive/widgets/classic_app_bar.dart';
 import 'package:escive/widgets/settings_tile.dart';
+import 'package:escive/widgets/proximity_settings.dart';
 import 'package:escive/widgets/warning_light.dart';
 import 'package:escive/utils/changelog.dart';
 import 'package:escive/utils/show_snackbar.dart';
@@ -71,6 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
             physics: ClampingScrollPhysics(),
             children: [
+              const ProximitySettings(),
               SettingsSection(title: 'settings.display.title'.tr()),
 
               SettingsTile.toggle(
